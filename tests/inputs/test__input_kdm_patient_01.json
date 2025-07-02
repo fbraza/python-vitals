@@ -1,0 +1,71 @@
+{
+    "metadata": {
+        "patient_id": "KDM001-2024-005",
+        "sex": "female",
+        "timestamp": "2024-06-10T07:30:00Z",
+        "test_date": "2024-06-10",
+        "laboratory": "Cleveland Clinic Labs"
+    },
+    "raw_biomarkers": {
+        "albumin": {
+            "value": 4.0,
+            "unit": "g/dL"
+        },
+        "creatinine": {
+            "value": 0.584,
+            "unit": "mg/dL"
+        },
+        "glucose": {
+            "value": 109.0,
+            "unit": "mg/dL"
+        },
+        "crp": {
+            "value": 0.21,
+            "unit": "mg/L"
+        },
+        "lymphocyte_percent": {
+            "value": 32.35,
+            "unit": "%"
+        },
+        "mean_cell_volume": {
+            "value": 92.4,
+            "unit": "fL"
+        },
+        "red_cell_distribution_width": {
+            "value": 12.05,
+            "unit": "%"
+        },
+        "alkaline_phosphatase": {
+            "value": 59.0,
+            "unit": "U/L"
+        },
+        "white_blood_cell_count": {
+            "value": 4.95,
+            "unit": "1000 cells/uL"
+        },
+        "total_cholesterol": {
+            "value": 236.0,
+            "unit": "mg/dL"
+        },
+        "hba1c": {
+            "value": 5.3,
+            "unit": "%"
+        },
+        "systolic_blood_pressure": {
+            "value": 131.0,
+            "unit": "mmHg"
+        },
+        "blood_urea_nitrogen": {
+            "value": 14.0,
+            "unit": "mg/dL"
+        },
+        "uric_acid": {
+            "value": 5.0,
+            "unit": "mg/dL"
+        },
+        "age": {
+            "value": 48,
+            "unit": "years"
+        }
+    }
+}

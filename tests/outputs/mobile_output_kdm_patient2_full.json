@@ -1,0 +1,87 @@
+{
+    "metadata": {
+        "patient_id": "KDM002-2024-006",
+        "sex": "male",
+        "timestamp": "2024-06-25T13:45:00Z",
+        "test_date": "2024-06-25",
+        "laboratory": "Johns Hopkins Labs"
+    },
+    "raw_biomarkers": {
+        "albumin_g_dl": {
+            "value": 4.5,
+            "unit": "g/dL"
+        },
+        "creatinine_mg_dl": {
+            "value": 0.968,
+            "unit": "mg/dL"
+        },
+        "glucose_mg_dl": {
+            "value": 85.0,
+            "unit": "mg/dL"
+        },
+        "crp_mg_l": {
+            "value": 0.21,
+            "unit": "mg/L"
+        },
+        "lymphocyte_percent_%": {
+            "value": 27.2,
+            "unit": "%"
+        },
+        "mean_cell_volume_fl": {
+            "value": 90.4,
+            "unit": "fL"
+        },
+        "red_cell_distribution_width_%": {
+            "value": 13.0,
+            "unit": "%"
+        },
+        "alkaline_phosphatase_u_l": {
+            "value": 74.0,
+            "unit": "U/L"
+        },
+        "white_blood_cell_count_1000_cells_ul": {
+            "value": 5.9,
+            "unit": "1000 cells/uL"
+        },
+        "total_cholesterol_mg_dl": {
+            "value": 225.0,
+            "unit": "mg/dL"
+        },
+        "hba1c_%": {
+            "value": 4.6,
+            "unit": "%"
+        },
+        "systolic_blood_pressure_mmhg": {
+            "value": 130.0,
+            "unit": "mmHg"
+        },
+        "blood_urea_nitrogen_mg_dl": {
+            "value": 14.0,
+            "unit": "mg/dL"
+        },
+        "uric_acid_mg_dl": {
+            "value": 6.4,
+            "unit": "mg/dL"
+        },
+        "age_years": {
+            "value": 35,
+            "unit": "years"
+        },
+        "glucose_mmol_l": {
+            "value": 4.7222,
+            "unit": "mmol/L"
+        },
+        "creatinine_umol_l": {
+            "value": 85.5712,
+            "unit": "umol/L"
+        },
+        "albumin_g_l": {
+            "value": 45.0,
+            "unit": "g/L"
+        },
+        "crp_mg_dl": {
+            "value": 0.021,
+            "unit": "mg/dL"
+        }
+    }
+}

@@ -1,0 +1,51 @@
+{
+    "metadata": {
+        "patient_id": "P004-2024-004",
+        "sex": "male",
+        "timestamp": "2024-05-28T11:20:00Z",
+        "test_date": "2024-05-28",
+        "laboratory": "Northwell Health Labs"
+    },
+    "raw_biomarkers": {
+        "albumin": {
+            "value": 4.4,
+            "unit": "g/dL"
+        },
+        "creatinine": {
+            "value": 0.776,
+            "unit": "mg/dL"
+        },
+        "glucose": {
+            "value": 89.0,
+            "unit": "mg/dL"
+        },
+        "crp": {
+            "value": 0.21,
+            "unit": "mg/L"
+        },
+        "lymphocyte_percent": {
+            "value": 29.0,
+            "unit": "%"
+        },
+        "mean_cell_volume": {
+            "value": 78.4,
+            "unit": "fL"
+        },
+        "red_cell_distribution_width": {
+            "value": 12.05,
+            "unit": "%"
+        },
+        "alkaline_phosphatase": {
+            "value": 35,
+            "unit": "U/L"
+        },
+        "white_blood_cell_count": {
+            "value": 5.55,
+            "unit": "1000 cells/uL"
+        },
+        "age": {
+            "value": 36,
+            "unit": "years"
+        }
+    }
+}
