@@ -16,13 +16,21 @@ dev = [
     "ipython>=9.3.0",
 ]
 
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["vitals*"]
+
 [tool.pyright]
-include = ["src"]
+include = ["vitals"]
 exclude = [
     "**/node_modules",
     "**/__pycache__",
-    "src/experimental",
-    "src/typestubs",
+    "vitals/experimental",
+    "vitals/typestubs",
 ]
 venvPath = ".venv"
 venv = "python_phenoage"
