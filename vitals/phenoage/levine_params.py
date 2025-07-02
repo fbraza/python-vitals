@@ -28,3 +28,20 @@ class Gompertz(BaseModel):
     coef1: float = 141.50225
     coef2: float = -0.00553
     coef3: float = 0.090165
+
+
+class Unit(BaseModel):
+    """
+    The expected unit to be used for phenoage computation
+    """
+
+    albumin: str = "g/L"
+    creatinine: str = "umol/L"
+    glucose: str = "mmol/L"
+    crp: str = "mg/L"
+    lymphocyte_percent: str = "%"
+    mean_cell_volume: str = "fL"
+    red_cell_distribution_width: str = "%"
+    alkaline_phosphatase: str = "U/L"
+    white_blood_cell_count: str = "1000 cells/uL"
+    age: str = "years"

@@ -1,48 +1,80 @@
-from typing import TypeAlias
+import json
 
 import levine_params as levine
 import numpy as np
-import utils
 from pydantic import BaseModel
 
-Biomarker: TypeAlias = tuple[float, str]
+
+class PhenoAgeMarkers(BaseModel):
+    """Processed PhenoAge biomarkers with standardized units."""
+
+    albumin: float
+    creatinine: float
+    glucose: float
+    crp: float
+    lymphocyte_percent: float
+    mean_cell_volume: float
+    red_cell_distribution_width: float
+    alkaline_phosphatase: float
+    white_blood_cell_count: float
+    age: float
 
 
-class PhenoAgeInput(BaseModel):
-    albumin: Biomarker
-    creatinine: Biomarker
-    glucose: Biomarker
-    log_crp: Biomarker
-    lymphocyte_percent: Biomarker
-    mean_cell_volume: Biomarker
-    red_cell_distribution_width: Biomarker
-    alkaline_phosphatase: Biomarker
-    white_blood_cell_count: Biomarker
-    age: Biomarker
+def extract_biomarkers_from_json(filepath: str) -> PhenoAgeMarkers:
+    """
+    Extract required biomarkers from JSON file based on expected names and units.
 
+    Args:
+        filepath: Path to JSON file containing biomarker data
 
-def convert_to_expected_units(
-    data: PhenoAgeInput, expected_units: utils.Unit
-) -> PhenoAgeInput:
-    data_dict = data.model_dump()
-    expected_dict = expected_units.model_dump()
-    converted = {}
+    Returns:
+        PhenoAgeMarkers instance with extracted values
+    """
+    with open(filepath) as f:
+        data = json.load(f)
 
-    for field, (value, unit) in data_dict.items():
-        expected_unit = expected_dict[field]
-        converter = utils.CONVERT_TO_EXPECTED_UNIT.get(field)
-        if unit == expected_unit:
-            converted[field] = (value, unit)
-        elif converter:
-            new_value = converter(value, unit)
-            converted[field] = (new_value, expected_unit)
-        else:
-            print(
-                f"No conversion rule for '{field}' from '{unit}' to '{expected_unit}', passing through."
+    raw_biomarkers = data.get("raw_biomarkers", {})
+    expected_units = levine.Unit()
+    expected_units_dict = expected_units.model_dump()
+
+    # Get required biomarker field names from PhenoAgeMarkers
+    required_fields = PhenoAgeMarkers.model_fields.keys()
+    extracted_values = {}
+
+    for field_name in required_fields:
+        expected_unit = expected_units_dict[field_name]
+
+        value = _find_biomarker_value(raw_biomarkers, field_name, expected_unit)
+        if value is None:
+            raise ValueError(
+                f"Could not find {field_name} biomarker with unit {expected_unit}"
             )
-            converted[field] = (value, unit)
+        extracted_values[field_name] = value
 
-    return PhenoAgeInput(**converted)
+    return PhenoAgeMarkers(**extracted_values)
+
+
+def _find_biomarker_value(
+    raw_biomarkers: dict, biomarker_name: str, expected_unit: str
+) -> float | None:
+    """
+    Find biomarker value by name prefix and expected unit.
+
+    Args:
+        raw_biomarkers: Dictionary of biomarker data
+        biomarker_name: Name of biomarker to find (without unit suffix)
+        expected_unit: Expected unit for this biomarker
+
+    Returns:
+        Biomarker value if found, None otherwise
+    """
+    for key, biomarker_data in raw_biomarkers.items():
+        if key.startswith(biomarker_name) and isinstance(biomarker_data, dict):
+            unit = biomarker_data.get("unit", "")
+            if unit == expected_unit:
+                return biomarker_data.get("value")
+
+    return None
 
 
 def gompertz_mortality_model(weighted_risk_score: float) -> float:
@@ -54,7 +86,7 @@ def gompertz_mortality_model(weighted_risk_score: float) -> float:
     )
 
 
-def phenoage(data: PhenoAgeInput) -> tuple[float, float, float]:
+def phenoage(filepath: str) -> tuple[float, float, float]:
     """
     The Phenoage score is calculated as a weighted (coefficients available in Levine et al 2018)
     linear combination of these variables, which was then transformed into units of years using 2 parametric
@@ -62,21 +94,23 @@ def phenoage(data: PhenoAgeInput) -> tuple[float, float, float]:
     and another for chronological age. Thus, PhenoAge represents the expected age within the population that
     corresponds to a person’s estimated hazard of mortality as a function of his/her biological profile.
     """
-    __data = convert_to_expected_units(data=data, expected_units=utils.Unit())
-    age = data.age[0]
+    # Extract biomarkers from JSON file
+    biomarkers = extract_biomarkers_from_json(filepath)
+
+    age = biomarkers.age
     coef = levine.LinearModel()
     weighted_risk_score = (
         coef.intercept
-        + (coef.albumin * __data.albumin[0])
-        + (coef.creatinine * __data.creatinine[0])
-        + (coef.glucose * __data.glucose[0])
-        + (coef.log_crp * __data.log_crp[0])
-        + (coef.lymphocyte_percent * __data.lymphocyte_percent[0])
-        + (coef.mean_cell_volume * __data.mean_cell_volume[0])
-        + (coef.red_cell_distribution_width * __data.red_cell_distribution_width[0])
-        + (coef.alkaline_phosphatase * __data.alkaline_phosphatase[0])
-        + (coef.white_blood_cell_count * __data.white_blood_cell_count[0])
-        + (coef.age * __data.age[0])
+        + (coef.albumin * biomarkers.albumin)
+        + (coef.creatinine * biomarkers.creatinine)
+        + (coef.glucose * biomarkers.glucose)
+        + (coef.log_crp * np.log(biomarkers.crp))
+        + (coef.lymphocyte_percent * biomarkers.lymphocyte_percent)
+        + (coef.mean_cell_volume * biomarkers.mean_cell_volume)
+        + (coef.red_cell_distribution_width * biomarkers.red_cell_distribution_width)
+        + (coef.alkaline_phosphatase * biomarkers.alkaline_phosphatase)
+        + (coef.white_blood_cell_count * biomarkers.white_blood_cell_count)
+        + (coef.age * biomarkers.age)
     )
 
     gompertz = gompertz_mortality_model(weighted_risk_score=weighted_risk_score)
@@ -84,3 +118,12 @@ def phenoage(data: PhenoAgeInput) -> tuple[float, float, float]:
     pred_age = model.coef1 + np.log(model.coef2 * np.log(1 - gompertz)) / model.coef3
     accl_age = pred_age - age
     return (age, pred_age, accl_age)
+
+
+if __name__ == "__main__":
+    age, pred_age, accl_age = phenoage(
+        "/Users/fbraza/Documents/python_phenoage/tests/outputs/test__input__patient_01.json"
+    )
+    print(f"Age: {age:.2f} years")
+    print(f"Predicted Age: {pred_age:.2f} years")
+    print(f"Accelerated Age: {accl_age:.2f} years")

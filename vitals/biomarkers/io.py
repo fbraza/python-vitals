@@ -38,3 +38,18 @@ def write(data: dict, output_file: Path) -> None:
         json.dump(data, f, indent=2)
 
     print(f"Processed: file written at {output_file.name}")
+
+
+if __name__ == "__main__":
+    # Process all JSON files in the input directory
+    input_dir = Path("tests/inputs")
+    output_dir = Path("tests/outputs")
+
+    for input_file in input_dir.glob("*.json"):
+        output_file = output_dir / input_file.name.replace("input", "output")
+
+        # Update biomarker data
+        data = update(input_file)
+
+        # Write output file
+        write(data, output_file)
