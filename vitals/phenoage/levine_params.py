@@ -38,7 +38,7 @@ class Unit(BaseModel):
     albumin: str = "g/L"
     creatinine: str = "umol/L"
     glucose: str = "mmol/L"
-    crp: str = "mg/L"
+    crp: str = "mg/dL"
     lymphocyte_percent: str = "%"
     mean_cell_volume: str = "fL"
     red_cell_distribution_width: str = "%"

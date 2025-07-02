@@ -19,9 +19,9 @@
             "value": 109.0,
             "unit": "mg/dL"
         },
-        "crp_mg_l": {
+        "crp_mg_dl": {
             "value": 0.21,
-            "unit": "mg/L"
+            "unit": "mg/dL"
         },
         "lymphocyte_percent_%": {
             "value": 32.35,
@@ -59,9 +59,9 @@
             "value": 40.0,
             "unit": "g/L"
         },
-        "crp_mg_dl": {
-            "value": 0.021,
-            "unit": "mg/dL"
+        "crp_mg_l": {
+            "value": 2.1,
+            "unit": "mg/L"
         }
     }
 }
