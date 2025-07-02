@@ -1,6 +1,6 @@
 import pytest
 
-from phenoage import compute
+from vitals.phenoage import compute
 
 
 @pytest.mark.parametrize(

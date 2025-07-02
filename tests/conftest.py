@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from phenoage.compute import PhenoAgeInput
+from vitals.phenoage.compute import PhenoAgeInput
 
 
 @pytest.fixture
