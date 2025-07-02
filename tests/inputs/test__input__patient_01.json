@@ -21,7 +21,7 @@
         },
         "crp": {
             "value": 0.5,
-            "unit": "mg/L"
+            "unit": "mg/dL"
         },
         "lymphocyte_percent": {
             "value": 40.3,

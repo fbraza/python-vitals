@@ -11,7 +11,7 @@ OUT_FILEPATH = Path(__file__).parent / "outputs"
 
 @pytest.mark.parametrize(
     "input_filename,output_filename",
-    [("test__input__patient_01.json", "mobile_output_patient_01.json")],
+    [("test__input__patient_01.json", "test__output__patient_01.json")],
 )
 def test_process_json_files(input_filename, output_filename):
     # Process files in the tests directory

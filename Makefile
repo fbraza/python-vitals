@@ -15,4 +15,4 @@ lint:
 
 .PHONY : test
 test:
-	coverage erase; coverage run --source . -m pytest tests/ -v --durations=5; coverage report --skip-empty --omit "tests/*" -m
+	coverage erase; coverage run --source . -m pytest tests/ -vv --durations=5; coverage report --skip-empty --omit "tests/*" -m
