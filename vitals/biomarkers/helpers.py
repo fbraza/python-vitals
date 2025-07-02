@@ -1,7 +1,3 @@
-import json
-from pathlib import Path
-
-
 def format_unit_suffix(unit: str) -> str:
     """Convert unit string to a valid suffix format.
 
@@ -113,61 +109,3 @@ def add_converted_biomarkers(biomarkers: dict) -> dict:
                 }
 
     return result
-
-
-def process_json_file(input_file: Path) -> None:
-    """Process a single JSON file and create output file with converted biomarkers.
-
-    Args:
-        input_file: Path to the input JSON file
-    """
-    # Load JSON data
-    with open(input_file) as f:
-        data = json.load(f)
-
-    # Update biomarker names with unit suffixes
-    if "raw_biomarkers" in data:
-        data["raw_biomarkers"] = update_biomarker_names(data["raw_biomarkers"])
-
-        # Add converted biomarkers
-        data["raw_biomarkers"] = add_converted_biomarkers(data["raw_biomarkers"])
-
-    # Create output filename
-    output_file = input_file.parent / input_file.name.replace("input", "output")
-
-    # Save output JSON
-    with open(output_file, "w") as f:
-        json.dump(data, f, indent=2)
-
-    print(f"Processed: {input_file.name} -> {output_file.name}")
-
-
-def process_json_files(test_dir: Path | str) -> None:
-    """Process all JSON files with 'input' in the name.
-
-    Args:
-        test_dir: Path to the tests directory
-    """
-    test_dir = Path(test_dir)
-
-    # Find all JSON files with 'input' in the name
-    input_files = list(test_dir.glob("*input*.json"))
-
-    if not input_files:
-        print("No input JSON files found in the tests directory.")
-        return
-
-    print(f"Found {len(input_files)} input files to process.")
-
-    # Process each file
-    for input_file in input_files:
-        try:
-            process_json_file(input_file)
-        except Exception as e:
-            print(f"Error processing {input_file.name}: {e}")
-
-
-if __name__ == "__main__":
-    # Process files in the tests directory
-    tests_dir = Path(__file__).parent.parent.parent / "tests"
-    process_json_files(tests_dir)
