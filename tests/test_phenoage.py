@@ -18,7 +18,7 @@ OUT_FILEPATH = Path(__file__).parent / "outputs"
 )
 def test_phenoage(filename, expected):
     # Get the actual fixture value using request.getfixturevalue
-    age, pred_age, accl_age = compute.phenoage(OUT_FILEPATH / filename)
+    age, pred_age, accl_age = compute.biological_age(OUT_FILEPATH / filename)
     expected_age, expected_pred_age, expected_accl_age = expected
 
     assert age == expected_age

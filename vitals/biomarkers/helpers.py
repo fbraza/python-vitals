@@ -1,3 +1,11 @@
+from typing import TypeVar
+
+import schemas
+from pydantic import BaseModel
+
+T = TypeVar("T", bound=BaseModel)
+
+
 def format_unit_suffix(unit: str) -> str:
     """Convert unit string to a valid suffix format.
 
@@ -36,6 +44,29 @@ def update_biomarker_names(biomarkers: dict) -> dict:
             updated_biomarkers[name] = data
 
     return updated_biomarkers
+
+
+def find_biomarker_value(
+    raw_biomarkers: dict, biomarker_name: str, expected_unit: str
+) -> float | None:
+    """
+    Find biomarker value by name prefix and expected unit.
+
+    Args:
+        raw_biomarkers: Dictionary of biomarker data
+        biomarker_name: Name of biomarker to find (without unit suffix)
+        expected_unit: Expected unit for this biomarker
+
+    Returns:
+        Biomarker value if found, None otherwise
+    """
+    for key, biomarker_data in raw_biomarkers.items():
+        if key.startswith(biomarker_name) and isinstance(biomarker_data, dict):
+            unit = biomarker_data.get("unit", "")
+            if unit == expected_unit:
+                return biomarker_data.get("value")
+
+    return None
 
 
 def add_converted_biomarkers(biomarkers: dict) -> dict:
@@ -109,3 +140,57 @@ def add_converted_biomarkers(biomarkers: dict) -> dict:
                 }
 
     return result
+
+
+def extract_biomarkers_from_json(
+    filepath: str,
+    biomarker_class: type[T],
+    biomarker_units: schemas.KdmUnits | schemas.PhenoageUnits,
+) -> schemas.KdmMarkers | schemas.PhenoageMarkers:
+    """
+    Generic function to extract biomarkers from JSON file based on a Pydantic model.
+
+    Args:
+        filepath: Path to JSON file containing biomarker data
+        model_class: Pydantic model class defining required biomarkers
+        units_model: Pydantic model instance containing expected units
+
+    Returns:
+        Instance of model_class with extracted biomarker values
+
+    Raises:
+        ValueError: If required biomarker is not found with expected unit
+    """
+    import json
+
+    with open(filepath) as f:
+        data = json.load(f)
+
+    raw_biomarkers = data.get("raw_biomarkers", {})
+    expected_units_dict = biomarker_units.model_dump()
+
+    # Get required biomarker field names from model
+    required_fields = biomarker_class.model_fields
+    extracted_values = {}
+
+    for field_name in required_fields:
+        expected_unit = expected_units_dict.get(field_name)
+        if expected_unit is None:
+            raise ValueError(f"No expected unit defined for {field_name}")
+
+        value = find_biomarker_value(raw_biomarkers, field_name, expected_unit)
+        if value is None:
+            raise ValueError(
+                f"Could not find {field_name} biomarker with unit {expected_unit}"
+            )
+        extracted_values[field_name] = value
+
+    markers = None
+    if biomarker_class is schemas.KdmMarkers:
+        markers = schemas.KdmMarkers(**extracted_values)
+    elif biomarker_class is schemas.PhenoageMarkers:
+        markers = schemas.PhenoageMarkers(**extracted_values)
+    else:
+        raise ValueError(f"Unsupported biomarker class: {biomarker_class}")
+
+    return markers
