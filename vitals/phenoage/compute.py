@@ -85,3 +85,17 @@ def biological_age(filepath: str) -> tuple[float, float, float]:
         return (age, pred_age, accl_age)
     else:
         raise ValueError(f"Invalid biomarker class used: {biomarkers}")
+
+
+# if __name__ == "__main__":
+#     from pathlib import Path
+#     input_dir = Path("tests/outputs")
+#     output_dir = Path("tests/outputs")
+
+#     for input_file in input_dir.glob("*.json"):
+#         if "patient" not in str(input_file):
+#             continue
+
+#         # Update biomarker data
+#         age, pred_age, accl_age = biological_age(str(input_file))
+#         print(f"Chrono Age: {age} ::: Predicted Age: {pred_age} ::: Accel {accl_age}")

@@ -1,0 +1,67 @@
+{
+    "metadata": {
+        "patient_id": "P021-2024-021",
+        "sex": "male",
+        "timestamp": "2024-07-04T13:00:00Z",
+        "test_date": "2024-07-04",
+        "laboratory": "NHANES Reference Labs"
+    },
+    "raw_biomarkers": {
+        "albumin_g_dl": {
+            "value": 4.5,
+            "unit": "g/dL"
+        },
+        "creatinine_mg_dl": {
+            "value": 0.872,
+            "unit": "mg/dL"
+        },
+        "glucose_mg_dl": {
+            "value": 86.0,
+            "unit": "mg/dL"
+        },
+        "crp_mg_l": {
+            "value": 2.1,
+            "unit": "mg/L"
+        },
+        "lymphocyte_percent_%": {
+            "value": 31.0,
+            "unit": "%"
+        },
+        "mean_cell_volume_fl": {
+            "value": 90.1,
+            "unit": "fL"
+        },
+        "red_cell_distribution_width_%": {
+            "value": 12.3,
+            "unit": "%"
+        },
+        "alkaline_phosphatase_u_l": {
+            "value": 55.0,
+            "unit": "U/L"
+        },
+        "white_blood_cell_count_1000_cells_ul": {
+            "value": 6.55,
+            "unit": "1000 cells/uL"
+        },
+        "age_years": {
+            "value": 42,
+            "unit": "years"
+        },
+        "glucose_mmol_l": {
+            "value": 4.7778,
+            "unit": "mmol/L"
+        },
+        "creatinine_umol_l": {
+            "value": 77.0848,
+            "unit": "umol/L"
+        },
+        "albumin_g_l": {
+            "value": 45.0,
+            "unit": "g/L"
+        },
+        "crp_mg_dl": {
+            "value": 0.21,
+            "unit": "mg/dL"
+        }
+    }
+}

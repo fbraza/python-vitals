@@ -3,7 +3,7 @@ from typing import TypeVar
 import schemas
 from pydantic import BaseModel
 
-T = TypeVar("T", bound=BaseModel)
+Biomarkers = TypeVar("Biomarkers", bound=BaseModel)
 
 
 def format_unit_suffix(unit: str) -> str:
@@ -144,9 +144,9 @@ def add_converted_biomarkers(biomarkers: dict) -> dict:
 
 def extract_biomarkers_from_json(
     filepath: str,
-    biomarker_class: type[T],
-    biomarker_units: schemas.KdmUnits | schemas.PhenoageUnits,
-) -> schemas.KdmMarkers | schemas.PhenoageMarkers:
+    biomarker_class: type[Biomarkers],
+    biomarker_units: schemas.PhenoageUnits,
+) -> Biomarkers:
     """
     Generic function to extract biomarkers from JSON file based on a Pydantic model.
 
@@ -185,12 +185,4 @@ def extract_biomarkers_from_json(
             )
         extracted_values[field_name] = value
 
-    markers = None
-    if biomarker_class is schemas.KdmMarkers:
-        markers = schemas.KdmMarkers(**extracted_values)
-    elif biomarker_class is schemas.PhenoageMarkers:
-        markers = schemas.PhenoageMarkers(**extracted_values)
-    else:
-        raise ValueError(f"Unsupported biomarker class: {biomarker_class}")
-
-    return markers
+    return biomarker_class(**extracted_values)
