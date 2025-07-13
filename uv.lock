@@ -790,8 +790,9 @@ wheels = [
 [[package]]
 name = "python-phenoage"
 version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
+    { name = "coverage" },
     { name = "numpy" },
     { name = "pandas" },
     { name = "pyaging" },
@@ -811,6 +812,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "coverage", specifier = ">=7.9.1" },
     { name = "numpy" },
     { name = "pandas" },
     { name = "pyaging" },
