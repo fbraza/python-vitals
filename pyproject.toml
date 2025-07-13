@@ -5,17 +5,15 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "pydantic",
+ "pydantic",
  "pandas",
  "numpy",
- "pyaging",
  "requests>=2.32.4",
  "coverage>=7.9.1",
 ]
 
 [dependency-groups]
 dev = [
-    "ruff>=0.11.13",
     "pytest",
     "pre-commit>=4.2.0",
     "black",
