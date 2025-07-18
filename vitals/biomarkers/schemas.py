@@ -32,3 +32,28 @@ class PhenoageMarkers(BaseModel):
     alkaline_phosphatase: float
     white_blood_cell_count: float
     age: float
+
+
+# ------ SCORE2 Schemas
+class Score2Units(BaseModel):
+    """
+    The expected unit to be used for Score2 computation
+    """
+
+    age: str = "years"
+    systolic_blood_pressure: str = "mmHg"
+    total_cholesterol: str = "mmol/L"
+    hdl_cholesterol: str = "mmol/L"
+    smoking: str = "yes/no"
+    is_male: str = "yes/no"
+
+
+class Score2Markers(BaseModel):
+    """Processed Score2 biomarkers with standardized units."""
+
+    age: float
+    systolic_blood_pressure: float
+    total_cholesterol: float
+    hdl_cholesterol: float
+    smoking: bool
+    is_male: bool

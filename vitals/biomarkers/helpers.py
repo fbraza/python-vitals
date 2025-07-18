@@ -4,6 +4,7 @@ import schemas
 from pydantic import BaseModel
 
 Biomarkers = TypeVar("Biomarkers", bound=BaseModel)
+Units = schemas.PhenoageUnits | schemas.Score2Units
 
 
 def format_unit_suffix(unit: str) -> str:
@@ -145,7 +146,7 @@ def add_converted_biomarkers(biomarkers: dict) -> dict:
 def extract_biomarkers_from_json(
     filepath: str,
     biomarker_class: type[Biomarkers],
-    biomarker_units: schemas.PhenoageUnits,
+    biomarker_units: Units,
 ) -> Biomarkers:
     """
     Generic function to extract biomarkers from JSON file based on a Pydantic model.
