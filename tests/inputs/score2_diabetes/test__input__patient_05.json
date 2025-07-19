@@ -1,0 +1,51 @@
+{
+    "metadata": {
+        "patient_id": "P005-2024-005",
+        "sex": "male",
+        "timestamp": "2024-11-04T12:00:00Z",
+        "test_date": "2024-11-04",
+        "laboratory": "SCORE2-Diabetes Labs"
+    },
+    "raw_biomarkers": {
+        "age_years": {
+            "value": 60,
+            "unit": "years"
+        },
+        "smoking_yes_no": {
+            "value": true,
+            "unit": "yes/no"
+        },
+        "systolic_blood_pressure_mmhg": {
+            "value": 150,
+            "unit": "mmHg"
+        },
+        "total_cholesterol_mmol_l": {
+            "value": 6.5,
+            "unit": "mmol/L"
+        },
+        "hdl_cholesterol_mmol_l": {
+            "value": 1.0,
+            "unit": "mmol/L"
+        },
+        "is_male_yes_no": {
+            "value": true,
+            "unit": "yes/no"
+        },
+        "diabetes_yes_no": {
+            "value": true,
+            "unit": "yes/no"
+        },
+        "age_at_diabetes_diagnosis_years": {
+            "value": 48,
+            "unit": "years"
+        },
+        "hba1c_mmol_mol": {
+            "value": 75,
+            "unit": "mmol/mol"
+        },
+        "egfr_ml_min_1_73m2": {
+            "value": 60,
+            "unit": "mL/min/1.73m\u00b2"
+        }
+    }
+}
