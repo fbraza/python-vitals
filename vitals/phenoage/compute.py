@@ -1,6 +1,7 @@
 import numpy as np
-from biomarkers import helpers, schemas
 from pydantic import BaseModel
+
+from vitals.biomarkers import helpers, schemas
 
 
 class LinearModel(BaseModel):
