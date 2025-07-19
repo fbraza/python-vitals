@@ -1,0 +1,35 @@
+{
+    "metadata": {
+        "patient_id": "P030-2024-030",
+        "sex": "female",
+        "timestamp": "2024-07-04T14:45:00Z",
+        "test_date": "2024-07-04",
+        "laboratory": "NHANES Reference Labs"
+    },
+    "raw_biomarkers": {
+        "age": {
+            "value": 60,
+            "unit": "years"
+        },
+        "smoking": {
+            "value": false,
+            "unit": "yes/no"
+        },
+        "systolic_blood_pressure": {
+            "value": 145,
+            "unit": "mmHg"
+        },
+        "total_cholesterol": {
+            "value": 6.5,
+            "unit": "mmol/L"
+        },
+        "hdl_cholesterol": {
+            "value": 1.5,
+            "unit": "mmol/L"
+        },
+        "is_male": {
+            "value": false,
+            "unit": "yes/no"
+        }
+    }
+}

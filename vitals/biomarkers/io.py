@@ -1,10 +1,11 @@
 import json
 from pathlib import Path
+from typing import Any
 
-import helpers
+from vitals.biomarkers import helpers
 
 
-def update(input_file: Path) -> dict:
+def update(input_file: Path) -> dict[str, Any]:
     """Process a single JSON file and create output file with converted biomarkers.
 
     Args:
@@ -26,7 +27,7 @@ def update(input_file: Path) -> dict:
     return data
 
 
-def write(data: dict, output_file: Path) -> None:
+def write(data: dict[str, Any], output_file: Path) -> None:
     """Write biomarker data to a JSON file.
 
     Args:
@@ -40,16 +41,16 @@ def write(data: dict, output_file: Path) -> None:
     print(f"Processed: file written at {output_file.name}")
 
 
-if __name__ == "__main__":
-    # Process all JSON files in the input directory
-    input_dir = Path("tests/inputs")
-    output_dir = Path("tests/outputs")
+# if __name__ == "__main__":
+#     # Process all JSON files in the input directory
+#     input_dir = Path("tests/raw")
+#     output_dir = Path("tests/inputs")
 
-    for input_file in input_dir.glob("*.json"):
-        output_file = output_dir / input_file.name.replace("input", "output")
+#     for input_file in input_dir.glob("*.json"):
+#         output_file = output_dir / input_file.name.replace("raw", "input")
 
-        # Update biomarker data
-        data = update(input_file)
+#         # Update biomarker data
+#         data = update(input_file)
 
-        # Write output file
-        write(data, output_file)
+#         # Write output file
+#         write(data, output_file)

@@ -1,9 +1,21 @@
-from typing import TypeVar
+from collections.abc import Callable
+from pathlib import Path
+from typing import Any, TypedDict, TypeVar
 
-import schemas
 from pydantic import BaseModel
 
+from vitals.biomarkers import schemas
+
 Biomarkers = TypeVar("Biomarkers", bound=BaseModel)
+Units = schemas.PhenoageUnits | schemas.Score2Units
+
+
+class ConversionInfo(TypedDict):
+    """Type definition for biomarker conversion information."""
+
+    target_name: str
+    target_unit: str
+    conversion: Callable[[float], float]
 
 
 def format_unit_suffix(unit: str) -> str:
@@ -23,7 +35,7 @@ def format_unit_suffix(unit: str) -> str:
     return suffix
 
 
-def update_biomarker_names(biomarkers: dict) -> dict:
+def update_biomarker_names(biomarkers: dict[str, Any]) -> dict[str, Any]:
     """Update biomarker names to include unit suffixes.
 
     Args:
@@ -47,7 +59,7 @@ def update_biomarker_names(biomarkers: dict) -> dict:
 
 
 def find_biomarker_value(
-    raw_biomarkers: dict, biomarker_name: str, expected_unit: str
+    raw_biomarkers: dict[str, Any], biomarker_name: str, expected_unit: str
 ) -> float | None:
     """
     Find biomarker value by name prefix and expected unit.
@@ -69,7 +81,7 @@ def find_biomarker_value(
     return None
 
 
-def add_converted_biomarkers(biomarkers: dict) -> dict:
+def add_converted_biomarkers(biomarkers: dict[str, Any]) -> dict[str, Any]:
     """Add converted biomarker entries for glucose, creatinine, albumin, and CRP.
 
     Args:
@@ -82,7 +94,7 @@ def add_converted_biomarkers(biomarkers: dict) -> dict:
     result = biomarkers.copy()
 
     # Conversion mappings
-    conversions = {
+    conversions: dict[str, ConversionInfo] = {
         "glucose_mg_dl": {
             "target_name": "glucose_mmol_l",
             "target_unit": "mmol/L",
@@ -133,7 +145,7 @@ def add_converted_biomarkers(biomarkers: dict) -> dict:
 
             # Skip if target already exists
             if target_name not in result:
-                converted_value = conversion_info["conversion"](source_value)  # type: ignore
+                converted_value = conversion_info["conversion"](source_value)
                 result[target_name] = {
                     "value": round(converted_value, 4),
                     "unit": conversion_info["target_unit"],
@@ -143,9 +155,9 @@ def add_converted_biomarkers(biomarkers: dict) -> dict:
 
 
 def extract_biomarkers_from_json(
-    filepath: str,
+    filepath: str | Path,
     biomarker_class: type[Biomarkers],
-    biomarker_units: schemas.PhenoageUnits,
+    biomarker_units: Units,
 ) -> Biomarkers:
     """
     Generic function to extract biomarkers from JSON file based on a Pydantic model.
