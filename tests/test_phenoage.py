@@ -4,7 +4,7 @@ import pytest
 
 from vitals.phenoage import compute
 
-OUT_FILEPATH = Path(__file__).parent / "inputs"
+OUT_FILEPATH = Path(__file__).parent / "inputs" / "phenoage"
 
 
 @pytest.mark.parametrize(

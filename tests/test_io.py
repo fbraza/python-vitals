@@ -5,8 +5,8 @@ import pytest
 
 from vitals.biomarkers import io
 
-INP_FILEPATH = Path(__file__).parent / "raw"
-OUT_FILEPATH = Path(__file__).parent / "inputs"
+INP_FILEPATH = Path(__file__).parent / "raw" / "phenoage"
+OUT_FILEPATH = Path(__file__).parent / "inputs" / "phenoage"
 
 
 @pytest.mark.parametrize(

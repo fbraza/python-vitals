@@ -4,7 +4,7 @@ import pytest
 
 from vitals.score2 import compute
 
-OUT_FILEPATH = Path(__file__).parent / "inputs"
+OUT_FILEPATH = Path(__file__).parent / "inputs" / "score2"
 
 
 @pytest.mark.parametrize(
