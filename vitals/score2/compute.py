@@ -131,55 +131,65 @@ def cardiovascular_risk(filepath: str | Path) -> tuple[float, float, RiskCategor
     coef: ModelCoefficients = ModelCoefficients()
 
     # Calculate linear predictor (x) based on sex
+
+    linear_pred: float
+    baseline_survival: float
+    scale1: float
+    scale2: float
+
     if is_male:
-        x: float = (
-            coef.male_age * cage +
-            coef.male_smoking * smoking +
-            coef.male_sbp * csbp +
-            coef.male_total_cholesterol * ctchol +
-            coef.male_hdl_cholesterol * chdl +
-            coef.male_smoking_age * smoking_age +
-            coef.male_sbp_age * sbp_age +
-            coef.male_tchol_age * tchol_age +
-            coef.male_hdl_age * hdl_age
+        linear_pred = (
+            coef.male_age * cage
+            + coef.male_smoking * smoking
+            + coef.male_sbp * csbp
+            + coef.male_total_cholesterol * ctchol
+            + coef.male_hdl_cholesterol * chdl
+            + coef.male_smoking_age * smoking_age
+            + coef.male_sbp_age * sbp_age
+            + coef.male_tchol_age * tchol_age
+            + coef.male_hdl_age * hdl_age
         )
-        baseline_survival: float = BaselineSurvival().male
-        scale1: float = CalibrationScales().male_scale1
-        scale2: float = CalibrationScales().male_scale2
+        baseline_survival = BaselineSurvival().male
+        scale1 = CalibrationScales().male_scale1
+        scale2 = CalibrationScales().male_scale2
     else:
-        x: float = (
-            coef.female_age * cage +
-            coef.female_smoking * smoking +
-            coef.female_sbp * csbp +
-            coef.female_total_cholesterol * ctchol +
-            coef.female_hdl_cholesterol * chdl +
-            coef.female_smoking_age * smoking_age +
-            coef.female_sbp_age * sbp_age +
-            coef.female_tchol_age * tchol_age +
-            coef.female_hdl_age * hdl_age
+        linear_pred = (
+            coef.female_age * cage
+            + coef.female_smoking * smoking
+            + coef.female_sbp * csbp
+            + coef.female_total_cholesterol * ctchol
+            + coef.female_hdl_cholesterol * chdl
+            + coef.female_smoking_age * smoking_age
+            + coef.female_sbp_age * sbp_age
+            + coef.female_tchol_age * tchol_age
+            + coef.female_hdl_age * hdl_age
         )
-        baseline_survival: float = BaselineSurvival().female
-        scale1: float = CalibrationScales().female_scale1
-        scale2: float = CalibrationScales().female_scale2
+        baseline_survival = BaselineSurvival().female
+        scale1 = CalibrationScales().female_scale1
+        scale2 = CalibrationScales().female_scale2
 
     # Calculate uncalibrated risk
-    uncalibrated_risk: float = 1 - np.power(baseline_survival, np.exp(x))
+    uncalibrated_risk: float = 1 - np.power(baseline_survival, np.exp(linear_pred))
 
     # Apply calibration for Belgium (Low Risk region)
     # Calibrated 10-year risk, % = [1 - exp(-exp(scale1 + scale2*ln(-ln(1 - 10-year risk))))] * 100
-    calibrated_risk: float = float((1 - np.exp(-np.exp(scale1 + scale2 * np.log(-np.log(1 - uncalibrated_risk))))) * 100)
+    calibrated_risk: float = float(
+        (1 - np.exp(-np.exp(scale1 + scale2 * np.log(-np.log(1 - uncalibrated_risk)))))
+        * 100
+    )
 
     # Determine risk category based on age
+    risk_category: RiskCategory
     if age < 50:
         if calibrated_risk < 2.5:
-            risk_category: RiskCategory = "Low to moderate"
+            risk_category = "Low to moderate"
         elif calibrated_risk < 7.5:
             risk_category = "High"
         else:
             risk_category = "Very high"
     else:  # age 50-69
         if calibrated_risk < 5:
-            risk_category: RiskCategory = "Low to moderate"
+            risk_category = "Low to moderate"
         elif calibrated_risk < 10:
             risk_category = "High"
         else:
