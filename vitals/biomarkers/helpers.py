@@ -1,7 +1,8 @@
 from typing import TypeVar
 
-import schemas
 from pydantic import BaseModel
+
+from vitals.biomarkers import schemas
 
 Biomarkers = TypeVar("Biomarkers", bound=BaseModel)
 Units = schemas.PhenoageUnits | schemas.Score2Units

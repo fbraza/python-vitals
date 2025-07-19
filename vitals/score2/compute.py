@@ -6,8 +6,9 @@ in apparently healthy individuals aged 40-69 years in Europe.
 """
 
 import numpy as np
-from biomarkers import helpers, schemas
 from pydantic import BaseModel
+
+from vitals.biomarkers import helpers, schemas
 
 
 class ModelCoefficients(BaseModel):
