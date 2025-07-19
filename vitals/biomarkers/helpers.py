@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Callable, TypeVar
+from typing import Any, Callable, TypeVar, TypedDict
 
 from pydantic import BaseModel
 
@@ -7,6 +7,13 @@ from vitals.biomarkers import schemas
 
 Biomarkers = TypeVar("Biomarkers", bound=BaseModel)
 Units = schemas.PhenoageUnits | schemas.Score2Units
+
+
+class ConversionInfo(TypedDict):
+    """Type definition for biomarker conversion information."""
+    target_name: str
+    target_unit: str
+    conversion: Callable[[float], float]
 
 
 def format_unit_suffix(unit: str) -> str:
@@ -85,7 +92,7 @@ def add_converted_biomarkers(biomarkers: dict[str, Any]) -> dict[str, Any]:
     result = biomarkers.copy()
 
     # Conversion mappings
-    conversions: dict[str, dict[str, str | Callable[[float], float]]] = {
+    conversions: dict[str, ConversionInfo] = {
         "glucose_mg_dl": {
             "target_name": "glucose_mmol_l",
             "target_unit": "mmol/L",
@@ -136,8 +143,8 @@ def add_converted_biomarkers(biomarkers: dict[str, Any]) -> dict[str, Any]:
 
             # Skip if target already exists
             if target_name not in result:
-                converted_value = conversion_info["conversion"](source_value)  # type: ignore
-                result[target_name] = { # type: ignore
+                converted_value = conversion_info["conversion"](source_value)
+                result[target_name] = {
                     "value": round(converted_value, 4),
                     "unit": conversion_info["target_unit"],
                 }
