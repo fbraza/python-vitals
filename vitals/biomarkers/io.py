@@ -5,7 +5,7 @@ from typing import Any, TypedDict
 from vitals.biomarkers import helpers
 
 
-class BiomarkerData(TypedDict, total=False):
+class BiomarkerData(TypedDict):
     """Type definition for processed biomarker data structure."""
     raw_biomarkers: dict[str, Any]
 
