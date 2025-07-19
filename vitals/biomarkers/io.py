@@ -1,10 +1,11 @@
 import json
 from pathlib import Path
+from typing import Any
 
 from vitals.biomarkers import helpers
 
 
-def update(input_file: Path) -> dict:
+def update(input_file: Path) -> dict[str, Any]:
     """Process a single JSON file and create output file with converted biomarkers.
 
     Args:
@@ -26,7 +27,7 @@ def update(input_file: Path) -> dict:
     return data
 
 
-def write(data: dict, output_file: Path) -> None:
+def write(data: dict[str, Any], output_file: Path) -> None:
     """Write biomarker data to a JSON file.
 
     Args:

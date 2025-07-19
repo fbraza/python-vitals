@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import numpy as np
 from pydantic import BaseModel
 
@@ -42,7 +44,7 @@ def __gompertz_mortality_model(weighted_risk_score: float) -> float:
     )
 
 
-def biological_age(filepath: str) -> tuple[float, float, float]:
+def biological_age(filepath: str | Path) -> tuple[float, float, float]:
     """
     The Phenoage score is calculated as a weighted (coefficients available in Levine et al 2018)
     linear combination of these variables, which was then transformed into units of years using 2 parametric
