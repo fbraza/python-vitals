@@ -44,7 +44,7 @@
             "unit": "mmol/mol"
         },
         "egfr_ml_min_1_73m2": {
-            "value": 50,
+            "value": 60,
             "unit": "mL/min/1.73m\u00b2"
         }
     }
