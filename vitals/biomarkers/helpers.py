@@ -4,10 +4,10 @@ from typing import Any, TypedDict, TypeVar
 
 from pydantic import BaseModel
 
-from vitals.biomarkers import schemas
+from vitals.schemas.units import PhenoageUnits, Score2DiabetesUnits, Score2Units
 
 Biomarkers = TypeVar("Biomarkers", bound=BaseModel)
-Units = schemas.PhenoageUnits | schemas.Score2Units | schemas.Score2DiabetesUnits
+Units = PhenoageUnits | Score2Units | Score2DiabetesUnits
 
 
 class ConversionInfo(TypedDict):

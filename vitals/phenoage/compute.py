@@ -3,7 +3,9 @@ from pathlib import Path
 import numpy as np
 from pydantic import BaseModel
 
-from vitals.biomarkers import helpers, schemas
+from vitals.biomarkers import helpers
+from vitals.schemas.markers import PhenoageMarkers
+from vitals.schemas.units import PhenoageUnits
 
 
 class LinearModel(BaseModel):
@@ -55,14 +57,14 @@ def biological_age(filepath: str | Path) -> tuple[float, float, float]:
     # Extract biomarkers from JSON file
     biomarkers = helpers.extract_biomarkers_from_json(
         filepath=filepath,
-        biomarker_class=schemas.PhenoageMarkers,
-        biomarker_units=schemas.PhenoageUnits(),
+        biomarker_class=PhenoageMarkers,
+        biomarker_units=PhenoageUnits(),
     )
 
     age = biomarkers.age
     coef = LinearModel()
 
-    if isinstance(biomarkers, schemas.PhenoageMarkers):
+    if isinstance(biomarkers, PhenoageMarkers):
         weighted_risk_score = (
             coef.intercept
             + (coef.albumin * biomarkers.albumin)

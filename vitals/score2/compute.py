@@ -6,78 +6,20 @@ in apparently healthy individuals aged 40-69 years in Europe.
 """
 
 from pathlib import Path
-from typing import Literal, TypeAlias
 
 import numpy as np
-from pydantic import BaseModel
 
-from vitals.biomarkers import helpers, schemas
-
-RiskCategory: TypeAlias = Literal["Low to moderate", "High", "Very high"]
-
-
-class ModelCoefficients(BaseModel):
-    """
-    Sex-specific coefficients for the SCORE2 Cox proportional hazards model.
-
-    These coefficients are used to calculate the 10-year risk of cardiovascular disease
-    based on transformed risk factors and their age interactions.
-    """
-
-    # Male coefficients
-    male_age: float = 0.3742
-    male_smoking: float = 0.6012
-    male_sbp: float = 0.2777
-    male_total_cholesterol: float = 0.1458
-    male_hdl_cholesterol: float = -0.2698
-
-    # Male interaction term coefficients
-    male_smoking_age: float = -0.0755
-    male_sbp_age: float = -0.0255
-    male_tchol_age: float = -0.0281
-    male_hdl_age: float = 0.0426
-
-    # Female coefficients
-    female_age: float = 0.4648
-    female_smoking: float = 0.7744
-    female_sbp: float = 0.3131
-    female_total_cholesterol: float = 0.1002
-    female_hdl_cholesterol: float = -0.2606
-
-    # Female interaction term coefficients
-    female_smoking_age: float = -0.1088
-    female_sbp_age: float = -0.0277
-    female_tchol_age: float = -0.0226
-    female_hdl_age: float = 0.0613
-
-
-class BaselineSurvival(BaseModel):
-    """
-    Sex-specific baseline survival probabilities for the SCORE2 model.
-
-    These values represent the 10-year survival probability for individuals
-    with all risk factors at their reference values.
-    """
-
-    male: float = 0.9605
-    female: float = 0.9776
-
-
-class CalibrationScales(BaseModel):
-    """
-    Region and sex-specific calibration scales for Belgium (Low Risk region).
-
-    These scales are used to calibrate the uncalibrated risk estimate to match
-    the population-specific cardiovascular disease incidence rates.
-    """
-
-    # Male calibration scales
-    male_scale1: float = -0.5699
-    male_scale2: float = 0.7476
-
-    # Female calibration scales
-    female_scale1: float = -0.7380
-    female_scale2: float = 0.7019
+from vitals.biomarkers import helpers
+from vitals.schemas.coefficients import Score2FemaleCoefficients, Score2MaleCoefficients
+from vitals.schemas.core import (
+    BaselineSurvival,
+    CalibrationScales,
+    RiskCategory,
+    apply_calibration,
+    determine_risk_category,
+)
+from vitals.schemas.markers import Score2Markers
+from vitals.schemas.units import Score2Units
 
 
 def cardiovascular_risk(filepath: str | Path) -> tuple[float, float, RiskCategory]:
@@ -104,11 +46,11 @@ def cardiovascular_risk(filepath: str | Path) -> tuple[float, float, RiskCategor
     # Extract biomarkers from JSON file
     biomarkers = helpers.extract_biomarkers_from_json(
         filepath=filepath,
-        biomarker_class=schemas.Score2Markers,
-        biomarker_units=schemas.Score2Units(),
+        biomarker_class=Score2Markers,
+        biomarker_units=Score2Units(),
     )
 
-    if not isinstance(biomarkers, schemas.Score2Markers):
+    if not isinstance(biomarkers, Score2Markers):
         raise ValueError(f"Invalid biomarker class used: {biomarkers}")
 
     age: float = biomarkers.age
@@ -127,72 +69,50 @@ def cardiovascular_risk(filepath: str | Path) -> tuple[float, float, RiskCategor
     tchol_age: float = ctchol * cage
     hdl_age: float = chdl * cage
 
-    # Get model coefficients
-    coef: ModelCoefficients = ModelCoefficients()
-
-    # Calculate linear predictor (x) based on sex
-
-    linear_pred: float
-    baseline_survival: float
-    scale1: float
-    scale2: float
+    # Get sex-specific coefficients and calibration values
+    baseline_survival_model = BaselineSurvival()
+    calibration_scales = CalibrationScales()
 
     if is_male:
+        male_coef = Score2MaleCoefficients()
         linear_pred = (
-            coef.male_age * cage
-            + coef.male_smoking * smoking
-            + coef.male_sbp * csbp
-            + coef.male_total_cholesterol * ctchol
-            + coef.male_hdl_cholesterol * chdl
-            + coef.male_smoking_age * smoking_age
-            + coef.male_sbp_age * sbp_age
-            + coef.male_tchol_age * tchol_age
-            + coef.male_hdl_age * hdl_age
+            male_coef.age * cage
+            + male_coef.smoking * smoking
+            + male_coef.sbp * csbp
+            + male_coef.total_cholesterol * ctchol
+            + male_coef.hdl_cholesterol * chdl
+            + male_coef.smoking_age * smoking_age
+            + male_coef.sbp_age * sbp_age
+            + male_coef.tchol_age * tchol_age
+            + male_coef.hdl_age * hdl_age
         )
-        baseline_survival = BaselineSurvival().male
-        scale1 = CalibrationScales().male_scale1
-        scale2 = CalibrationScales().male_scale2
+        baseline_survival = baseline_survival_model.male
+        scale1 = calibration_scales.male_scale1
+        scale2 = calibration_scales.male_scale2
     else:
+        female_coef = Score2FemaleCoefficients()
         linear_pred = (
-            coef.female_age * cage
-            + coef.female_smoking * smoking
-            + coef.female_sbp * csbp
-            + coef.female_total_cholesterol * ctchol
-            + coef.female_hdl_cholesterol * chdl
-            + coef.female_smoking_age * smoking_age
-            + coef.female_sbp_age * sbp_age
-            + coef.female_tchol_age * tchol_age
-            + coef.female_hdl_age * hdl_age
+            female_coef.age * cage
+            + female_coef.smoking * smoking
+            + female_coef.sbp * csbp
+            + female_coef.total_cholesterol * ctchol
+            + female_coef.hdl_cholesterol * chdl
+            + female_coef.smoking_age * smoking_age
+            + female_coef.sbp_age * sbp_age
+            + female_coef.tchol_age * tchol_age
+            + female_coef.hdl_age * hdl_age
         )
-        baseline_survival = BaselineSurvival().female
-        scale1 = CalibrationScales().female_scale1
-        scale2 = CalibrationScales().female_scale2
+        baseline_survival = baseline_survival_model.female
+        scale1 = calibration_scales.female_scale1
+        scale2 = calibration_scales.female_scale2
 
     # Calculate uncalibrated risk
     uncalibrated_risk: float = 1 - np.power(baseline_survival, np.exp(linear_pred))
 
     # Apply calibration for Belgium (Low Risk region)
-    # Calibrated 10-year risk, % = [1 - exp(-exp(scale1 + scale2*ln(-ln(1 - 10-year risk))))] * 100
-    calibrated_risk: float = float(
-        (1 - np.exp(-np.exp(scale1 + scale2 * np.log(-np.log(1 - uncalibrated_risk)))))
-        * 100
-    )
+    calibrated_risk: float = apply_calibration(uncalibrated_risk, scale1, scale2)
 
     # Determine risk category based on age
-    risk_category: RiskCategory
-    if age < 50:
-        if calibrated_risk < 2.5:
-            risk_category = "Low to moderate"
-        elif calibrated_risk < 7.5:
-            risk_category = "High"
-        else:
-            risk_category = "Very high"
-    else:  # age 50-69
-        if calibrated_risk < 5:
-            risk_category = "Low to moderate"
-        elif calibrated_risk < 10:
-            risk_category = "High"
-        else:
-            risk_category = "Very high"
+    risk_category: RiskCategory = determine_risk_category(age, calibrated_risk)
 
     return (age, round(calibrated_risk, 2), risk_category)
