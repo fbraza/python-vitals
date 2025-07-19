@@ -5,13 +5,13 @@ import pytest
 
 from vitals.biomarkers import io
 
-INP_FILEPATH = Path(__file__).parent / "inputs"
-OUT_FILEPATH = Path(__file__).parent / "outputs"
+INP_FILEPATH = Path(__file__).parent / "raw" / "phenoage"
+OUT_FILEPATH = Path(__file__).parent / "inputs" / "phenoage"
 
 
 @pytest.mark.parametrize(
     "input_filename,output_filename",
-    [("test__input__patient_01.json", "test__output__patient_01.json")],
+    [("test__raw__patient_01.json", "test__input__patient_01.json")],
 )
 def test_process_json_files(input_filename, output_filename):
     # Process files in the tests directory
