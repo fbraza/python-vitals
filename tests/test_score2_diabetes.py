@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from vitals.score2_diabetes import compute
+from vitals.models import score2_diabetes
 
 OUT_FILEPATH = Path(__file__).parent / "inputs" / "score2_diabetes"
 
@@ -26,7 +26,7 @@ def test_score2_diabetes(filename, expected):
     They need to be calculated using MDCalc and updated before running tests.
     """
     # Get the actual fixture value
-    age, pred_risk, pred_risk_category = compute.cardiovascular_risk(
+    age, pred_risk, pred_risk_category = score2_diabetes.compute(
         OUT_FILEPATH / filename
     )
     expected_age, expected_risk, expected_category = expected

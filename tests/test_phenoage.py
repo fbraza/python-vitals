@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from vitals.phenoage import compute
+from vitals.models import phenoage
 
 OUT_FILEPATH = Path(__file__).parent / "inputs" / "phenoage"
 
@@ -25,7 +25,7 @@ OUT_FILEPATH = Path(__file__).parent / "inputs" / "phenoage"
 )
 def test_phenoage(filename, expected):
     # Get the actual fixture value using request.getfixturevalue
-    age, pred_age, accl_age = compute.biological_age(OUT_FILEPATH / filename)
+    age, pred_age, accl_age = phenoage.compute(OUT_FILEPATH / filename)
     expected_age, expected_pred_age, expected_accl_age = expected
 
     assert age == expected_age

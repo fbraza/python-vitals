@@ -1,13 +1,15 @@
 from collections.abc import Callable
 from pathlib import Path
-from typing import Any, TypedDict, TypeVar
+from typing import Any, Literal, TypeAlias, TypedDict, TypeVar
 
+import numpy as np
 from pydantic import BaseModel
 
-from vitals.schemas.units import PhenoageUnits, Score2DiabetesUnits, Score2Units
+from vitals.schemas import phenoage, score2
 
+RiskCategory: TypeAlias = Literal["Low to moderate", "High", "Very high"]
 Biomarkers = TypeVar("Biomarkers", bound=BaseModel)
-Units = PhenoageUnits | Score2Units | Score2DiabetesUnits
+Units = phenoage.Units | score2.Units | score2.UnitsDiabetes
 
 
 class ConversionInfo(TypedDict):
@@ -198,3 +200,57 @@ def extract_biomarkers_from_json(
         extracted_values[field_name] = value
 
     return biomarker_class(**extracted_values)
+
+
+def determine_risk_category(age: float, calibrated_risk: float) -> RiskCategory:
+    """
+    Determine cardiovascular risk category based on age and calibrated risk percentage.
+
+    Args:
+        age: Patient's age in years
+        calibrated_risk: Calibrated 10-year CVD risk as a percentage
+
+    Returns:
+        Risk stratification category
+    """
+    if age < 50:
+        if calibrated_risk < 2.5:
+            return "Low to moderate"
+        elif calibrated_risk < 7.5:
+            return "High"
+        else:
+            return "Very high"
+    else:  # age 50-69
+        if calibrated_risk < 5:
+            return "Low to moderate"
+        elif calibrated_risk < 10:
+            return "High"
+        else:
+            return "Very high"
+
+
+def apply_calibration(uncalibrated_risk: float, scale1: float, scale2: float) -> float:
+    """
+    Apply regional calibration to uncalibrated risk estimate.
+
+    Args:
+        uncalibrated_risk: Raw risk estimate from the Cox model
+        scale1: First calibration scale parameter
+        scale2: Second calibration scale parameter
+
+    Returns:
+        Calibrated 10-year CVD risk as a percentage
+    """
+    return float(
+        (1 - np.exp(-np.exp(scale1 + scale2 * np.log(-np.log(1 - uncalibrated_risk)))))
+        * 100
+    )
+
+
+def gompertz_mortality_model(weighted_risk_score: float) -> float:
+    params = phenoage.Gompertz()
+    return 1 - np.exp(
+        -np.exp(weighted_risk_score)
+        * (np.exp(120 * params.lambda_) - 1)
+        / params.lambda_
+    )

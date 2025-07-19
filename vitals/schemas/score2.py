@@ -1,7 +1,65 @@
 from pydantic import BaseModel
 
+# Common for all models
 
-class Score2MaleCoefficients(BaseModel):
+
+class BaselineSurvival(BaseModel):
+    """
+    Sex-specific baseline survival probabilities for the SCORE2 model.
+
+    These values represent the 10-year survival probability for individuals
+    with all risk factors at their reference values.
+    """
+
+    male: float = 0.9605
+    female: float = 0.9776
+
+
+class CalibrationScales(BaseModel):
+    """
+    Region and sex-specific calibration scales for Belgium (Low Risk region).
+
+    These scales are used to calibrate the uncalibrated risk estimate to match
+    the population-specific cardiovascular disease incidence rates.
+    """
+
+    # Male calibration scales
+    male_scale1: float = -0.5699
+    male_scale2: float = 0.7476
+
+    # Female calibration scales
+    female_scale1: float = -0.7380
+    female_scale2: float = 0.7019
+
+
+# ----- For Basal score2 model
+
+
+class Markers(BaseModel):
+    """Processed Score2 biomarkers with standardized units."""
+
+    age: float
+    systolic_blood_pressure: float
+    total_cholesterol: float
+    hdl_cholesterol: float
+    smoking: bool
+    is_male: bool
+
+
+class Units(BaseModel):
+    """
+    The expected unit to be used for Score2 computation
+    """
+
+    age: str = "years"
+    systolic_blood_pressure: str = "mmHg"
+    total_cholesterol: str = "mmol/L"
+    hdl_cholesterol: str = "mmol/L"
+    smoking: str = "yes/no"
+    is_male: str = "yes/no"
+
+
+class MaleCoefficientsBaseModel(BaseModel):
     """
     Male-specific coefficients for the SCORE2 Cox proportional hazards model.
     """
@@ -20,7 +78,7 @@ class Score2MaleCoefficients(BaseModel):
     hdl_age: float = 0.0426
 
 
-class Score2FemaleCoefficients(BaseModel):
+class FemaleCoefficientsBaseModel(BaseModel):
     """
     Female-specific coefficients for the SCORE2 Cox proportional hazards model.
     """
@@ -39,7 +97,42 @@ class Score2FemaleCoefficients(BaseModel):
     hdl_age: float = 0.0613
 
 
-class Score2DiabetesMaleCoefficients(Score2MaleCoefficients):
+# ----- For Diabetic score2 model
+
+
+class MarkersDiabetes(BaseModel):
+    """Processed Score2-Diabetes biomarkers with standardized units."""
+
+    age: float
+    systolic_blood_pressure: float
+    total_cholesterol: float
+    hdl_cholesterol: float
+    smoking: bool
+    is_male: bool
+    diabetes: bool
+    age_at_diabetes_diagnosis: float
+    hba1c: float
+    egfr: float
+
+
+class UnitsDiabetes(BaseModel):
+    """
+    The expected unit to be used for Score2-Diabetes computation
+    """
+
+    age: str = "years"
+    systolic_blood_pressure: str = "mmHg"
+    total_cholesterol: str = "mmol/L"
+    hdl_cholesterol: str = "mmol/L"
+    smoking: str = "yes/no"
+    is_male: str = "yes/no"
+    diabetes: str = "yes/no"
+    age_at_diabetes_diagnosis: str = "years"
+    hba1c: str = "mmol/mol"
+    egfr: str = "mL/min/1.73m²"
+
+
+class MaleCoefficientsDiabeticModel(MaleCoefficientsBaseModel):
     """
     Male-specific coefficients for the SCORE2-Diabetes Cox proportional hazards model.
     Extends the base SCORE2 male coefficients with diabetes-specific parameters.
@@ -71,7 +164,7 @@ class Score2DiabetesMaleCoefficients(Score2MaleCoefficients):
     egfr_age: float = 0.0115
 
 
-class Score2DiabetesFemaleCoefficients(Score2FemaleCoefficients):
+class FemaleCoefficientsDiabeticModel(FemaleCoefficientsBaseModel):
     """
     Female-specific coefficients for the SCORE2-Diabetes Cox proportional hazards model.
     Extends the base SCORE2 female coefficients with diabetes-specific parameters.
