@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from vitals.biomarkers import schemas
 
 Biomarkers = TypeVar("Biomarkers", bound=BaseModel)
-Units = schemas.PhenoageUnits | schemas.Score2Units
+Units = schemas.PhenoageUnits | schemas.Score2Units | schemas.Score2DiabetesUnits
 
 
 class ConversionInfo(TypedDict):
