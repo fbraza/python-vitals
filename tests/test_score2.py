@@ -14,7 +14,7 @@ OUT_FILEPATH = Path(__file__).parent / "outputs"
         ("test__output__patient_26.json", (50.00, 6.31, "High")),
     ],
 )
-def test_phenoage(filename, expected):
+def test_score2(filename, expected):
     # Get the actual fixture value using request.getfixturevalue
     age, pred_risk, pred_risk_category = compute.cardiovascular_risk(OUT_FILEPATH / filename)
     expected_age, expected_risk, expected_category = expected
