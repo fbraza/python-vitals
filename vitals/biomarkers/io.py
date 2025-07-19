@@ -1,16 +1,11 @@
 import json
 from pathlib import Path
-from typing import Any, TypedDict
+from typing import Any
 
 from vitals.biomarkers import helpers
 
 
-class BiomarkerData(TypedDict):
-    """Type definition for processed biomarker data structure."""
-    raw_biomarkers: dict[str, Any]
-
-
-def update(input_file: Path) -> BiomarkerData:
+def update(input_file: Path) -> dict[str, Any]:
     """Process a single JSON file and create output file with converted biomarkers.
 
     Args:
