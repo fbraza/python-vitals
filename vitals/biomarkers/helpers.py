@@ -1,5 +1,6 @@
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Callable, TypeVar, TypedDict
+from typing import Any, TypedDict, TypeVar
 
 from pydantic import BaseModel
 
@@ -11,6 +12,7 @@ Units = schemas.PhenoageUnits | schemas.Score2Units
 
 class ConversionInfo(TypedDict):
     """Type definition for biomarker conversion information."""
+
     target_name: str
     target_unit: str
     conversion: Callable[[float], float]

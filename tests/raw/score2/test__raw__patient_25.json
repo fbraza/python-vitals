@@ -1,35 +1,35 @@
 {
-  "metadata": {
-    "patient_id": "P024-2024-024",
-    "sex": "female",
-    "timestamp": "2024-07-04T13:45:00Z",
-    "test_date": "2024-07-04",
-    "laboratory": "NHANES Reference Labs"
-  },
-  "raw_biomarkers": {
-    "age": {
-      "value": 50,
-      "unit": "years"
+    "metadata": {
+        "patient_id": "P024-2024-024",
+        "sex": "female",
+        "timestamp": "2024-07-04T13:45:00Z",
+        "test_date": "2024-07-04",
+        "laboratory": "NHANES Reference Labs"
     },
-    "smoking": {
-      "value": true,
-      "unit": "yes/no"
-    },
-    "systolic_blood_pressure": {
-      "value": 140,
-      "unit": "mmHg"
-    },
-    "total_cholesterol": {
-      "value": 6.3,
-      "unit": "mmol/L"
-    },
-    "hdl_cholesterol": {
-      "value": 1.4,
-      "unit": "mmol/L"
-    },
-    "is_male": {
-      "value": false,
-      "unit": "yes/no"
+    "raw_biomarkers": {
+        "age": {
+            "value": 50,
+            "unit": "years"
+        },
+        "smoking": {
+            "value": true,
+            "unit": "yes/no"
+        },
+        "systolic_blood_pressure": {
+            "value": 140,
+            "unit": "mmHg"
+        },
+        "total_cholesterol": {
+            "value": 6.3,
+            "unit": "mmol/L"
+        },
+        "hdl_cholesterol": {
+            "value": 1.4,
+            "unit": "mmol/L"
+        },
+        "is_male": {
+            "value": false,
+            "unit": "yes/no"
+        }
     }
-  }
 }
