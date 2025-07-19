@@ -15,15 +15,15 @@
       "value": true,
       "unit": "yes/no"
     },
-    "systolic_blood_pressure_mmHg": {
+    "systolic_blood_pressure_mmhg": {
       "value": 140,
       "unit": "mmHg"
     },
-    "total_cholesterol_mmol_L": {
+    "total_cholesterol_mmol_l": {
       "value": 6.3,
       "unit": "mmol/L"
     },
-    "hdl_cholesterol_mmol_L": {
+    "hdl_cholesterol_mmol_l": {
       "value": 1.4,
       "unit": "mmol/L"
     },
