@@ -5,10 +5,15 @@ This module implements the SCORE2 algorithm for 10-year cardiovascular disease r
 in apparently healthy individuals aged 40-69 years in Europe.
 """
 
+from pathlib import Path
+from typing import Literal, TypeAlias
+
 import numpy as np
 from pydantic import BaseModel
 
 from vitals.biomarkers import helpers, schemas
+
+RiskCategory: TypeAlias = Literal["Low to moderate", "High", "Very high"]
 
 
 class ModelCoefficients(BaseModel):
@@ -75,7 +80,7 @@ class CalibrationScales(BaseModel):
     female_scale2: float = 0.7019
 
 
-def cardiovascular_risk(filepath: str) -> tuple[float, float, str]:
+def cardiovascular_risk(filepath: str | Path) -> tuple[float, float, RiskCategory]:
     """
     Calculate the 10-year cardiovascular disease risk using the SCORE2 algorithm.
 
@@ -106,28 +111,28 @@ def cardiovascular_risk(filepath: str) -> tuple[float, float, str]:
     if not isinstance(biomarkers, schemas.Score2Markers):
         raise ValueError(f"Invalid biomarker class used: {biomarkers}")
 
-    age = biomarkers.age
-    is_male = biomarkers.is_male  # True for male, False for female
+    age: float = biomarkers.age
+    is_male: bool = biomarkers.is_male  # True for male, False for female
 
     # Apply transformations to biomarkers
-    cage = (age - 60) / 5
-    smoking = float(biomarkers.smoking)  # Convert bool to float (1.0 or 0.0)
-    csbp = (biomarkers.systolic_blood_pressure - 120) / 20
-    ctchol = biomarkers.total_cholesterol - 6
-    chdl = (biomarkers.hdl_cholesterol - 1.3) / 0.5
+    cage: float = (age - 60) / 5
+    smoking: float = float(biomarkers.smoking)  # Convert bool to float (1.0 or 0.0)
+    csbp: float = (biomarkers.systolic_blood_pressure - 120) / 20
+    ctchol: float = biomarkers.total_cholesterol - 6
+    chdl: float = (biomarkers.hdl_cholesterol - 1.3) / 0.5
 
     # Calculate interaction terms
-    smoking_age = smoking * cage
-    sbp_age = csbp * cage
-    tchol_age = ctchol * cage
-    hdl_age = chdl * cage
+    smoking_age: float = smoking * cage
+    sbp_age: float = csbp * cage
+    tchol_age: float = ctchol * cage
+    hdl_age: float = chdl * cage
 
     # Get model coefficients
-    coef = ModelCoefficients()
+    coef: ModelCoefficients = ModelCoefficients()
 
     # Calculate linear predictor (x) based on sex
     if is_male:
-        x = (
+        x: float = (
             coef.male_age * cage +
             coef.male_smoking * smoking +
             coef.male_sbp * csbp +
@@ -138,11 +143,11 @@ def cardiovascular_risk(filepath: str) -> tuple[float, float, str]:
             coef.male_tchol_age * tchol_age +
             coef.male_hdl_age * hdl_age
         )
-        baseline_survival = BaselineSurvival().male
-        scale1 = CalibrationScales().male_scale1
-        scale2 = CalibrationScales().male_scale2
+        baseline_survival: float = BaselineSurvival().male
+        scale1: float = CalibrationScales().male_scale1
+        scale2: float = CalibrationScales().male_scale2
     else:
-        x = (
+        x: float = (
             coef.female_age * cage +
             coef.female_smoking * smoking +
             coef.female_sbp * csbp +
@@ -153,28 +158,28 @@ def cardiovascular_risk(filepath: str) -> tuple[float, float, str]:
             coef.female_tchol_age * tchol_age +
             coef.female_hdl_age * hdl_age
         )
-        baseline_survival = BaselineSurvival().female
-        scale1 = CalibrationScales().female_scale1
-        scale2 = CalibrationScales().female_scale2
+        baseline_survival: float = BaselineSurvival().female
+        scale1: float = CalibrationScales().female_scale1
+        scale2: float = CalibrationScales().female_scale2
 
     # Calculate uncalibrated risk
-    uncalibrated_risk = 1 - np.power(baseline_survival, np.exp(x))
+    uncalibrated_risk: float = 1 - np.power(baseline_survival, np.exp(x))
 
     # Apply calibration for Belgium (Low Risk region)
     # Calibrated 10-year risk, % = [1 - exp(-exp(scale1 + scale2*ln(-ln(1 - 10-year risk))))] * 100
-    calibrated_risk = float((1 - np.exp(-np.exp(scale1 + scale2 * np.log(-np.log(1 - uncalibrated_risk))))) * 100)
+    calibrated_risk: float = float((1 - np.exp(-np.exp(scale1 + scale2 * np.log(-np.log(1 - uncalibrated_risk))))) * 100)
 
     # Determine risk category based on age
     if age < 50:
         if calibrated_risk < 2.5:
-            risk_category = "Low to moderate"
+            risk_category: RiskCategory = "Low to moderate"
         elif calibrated_risk < 7.5:
             risk_category = "High"
         else:
             risk_category = "Very high"
     else:  # age 50-69
         if calibrated_risk < 5:
-            risk_category = "Low to moderate"
+            risk_category: RiskCategory = "Low to moderate"
         elif calibrated_risk < 10:
             risk_category = "High"
         else:
