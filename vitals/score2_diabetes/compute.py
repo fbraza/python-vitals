@@ -86,54 +86,37 @@ def cardiovascular_risk(filepath: str | Path) -> tuple[float, float, RiskCategor
     baseline_survival_model = BaselineSurvival()
     calibration_scales = CalibrationScales()
 
+    coef: Score2DiabetesMaleCoefficients | Score2DiabetesFemaleCoefficients
     if is_male:
-        male_coef = Score2DiabetesMaleCoefficients()
-        linear_pred = (
-            male_coef.age * cage
-            + male_coef.smoking * smoking
-            + male_coef.sbp * csbp
-            + male_coef.diabetes * diabetes
-            + male_coef.total_cholesterol * ctchol
-            + male_coef.hdl_cholesterol * chdl
-            + male_coef.age_at_diabetes_diagnosis * cagediab
-            + male_coef.hba1c * ca1c
-            + male_coef.egfr * cegfr
-            + male_coef.egfr_squared * cegfr_squared
-            + male_coef.smoking_age * smoking_age
-            + male_coef.sbp_age * sbp_age
-            + male_coef.diabetes_age * diabetes_age
-            + male_coef.tchol_age * tchol_age
-            + male_coef.hdl_age * hdl_age
-            + male_coef.hba1c_age * hba1c_age
-            + male_coef.egfr_age * egfr_age
-        )
+        coef = Score2DiabetesMaleCoefficients()
         baseline_survival = baseline_survival_model.male
         scale1 = calibration_scales.male_scale1
         scale2 = calibration_scales.male_scale2
     else:
-        female_coef = Score2DiabetesFemaleCoefficients()
-        linear_pred = (
-            female_coef.age * cage
-            + female_coef.smoking * smoking
-            + female_coef.sbp * csbp
-            + female_coef.diabetes * diabetes
-            + female_coef.total_cholesterol * ctchol
-            + female_coef.hdl_cholesterol * chdl
-            + female_coef.age_at_diabetes_diagnosis * cagediab
-            + female_coef.hba1c * ca1c
-            + female_coef.egfr * cegfr
-            + female_coef.egfr_squared * cegfr_squared
-            + female_coef.smoking_age * smoking_age
-            + female_coef.sbp_age * sbp_age
-            + female_coef.diabetes_age * diabetes_age
-            + female_coef.tchol_age * tchol_age
-            + female_coef.hdl_age * hdl_age
-            + female_coef.hba1c_age * hba1c_age
-            + female_coef.egfr_age * egfr_age
-        )
+        coef = Score2DiabetesFemaleCoefficients()
         baseline_survival = baseline_survival_model.female
         scale1 = calibration_scales.female_scale1
         scale2 = calibration_scales.female_scale2
+
+    linear_pred = (
+        coef.age * cage
+        + coef.smoking * smoking
+        + coef.sbp * csbp
+        + coef.diabetes * diabetes
+        + coef.total_cholesterol * ctchol
+        + coef.hdl_cholesterol * chdl
+        + coef.age_at_diabetes_diagnosis * cagediab
+        + coef.hba1c * ca1c
+        + coef.egfr * cegfr
+        + coef.egfr_squared * cegfr_squared
+        + coef.smoking_age * smoking_age
+        + coef.sbp_age * sbp_age
+        + coef.diabetes_age * diabetes_age
+        + coef.tchol_age * tchol_age
+        + coef.hdl_age * hdl_age
+        + coef.hba1c_age * hba1c_age
+        + coef.egfr_age * egfr_age
+    )
 
     # Calculate uncalibrated risk
     uncalibrated_risk: float = 1 - np.power(baseline_survival, np.exp(linear_pred))

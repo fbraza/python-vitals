@@ -73,38 +73,29 @@ def cardiovascular_risk(filepath: str | Path) -> tuple[float, float, RiskCategor
     baseline_survival_model = BaselineSurvival()
     calibration_scales = CalibrationScales()
 
+    coef: Score2MaleCoefficients | Score2FemaleCoefficients
     if is_male:
-        male_coef = Score2MaleCoefficients()
-        linear_pred = (
-            male_coef.age * cage
-            + male_coef.smoking * smoking
-            + male_coef.sbp * csbp
-            + male_coef.total_cholesterol * ctchol
-            + male_coef.hdl_cholesterol * chdl
-            + male_coef.smoking_age * smoking_age
-            + male_coef.sbp_age * sbp_age
-            + male_coef.tchol_age * tchol_age
-            + male_coef.hdl_age * hdl_age
-        )
+        coef = Score2MaleCoefficients()
         baseline_survival = baseline_survival_model.male
         scale1 = calibration_scales.male_scale1
         scale2 = calibration_scales.male_scale2
     else:
-        female_coef = Score2FemaleCoefficients()
-        linear_pred = (
-            female_coef.age * cage
-            + female_coef.smoking * smoking
-            + female_coef.sbp * csbp
-            + female_coef.total_cholesterol * ctchol
-            + female_coef.hdl_cholesterol * chdl
-            + female_coef.smoking_age * smoking_age
-            + female_coef.sbp_age * sbp_age
-            + female_coef.tchol_age * tchol_age
-            + female_coef.hdl_age * hdl_age
-        )
+        coef = Score2FemaleCoefficients()
         baseline_survival = baseline_survival_model.female
         scale1 = calibration_scales.female_scale1
         scale2 = calibration_scales.female_scale2
+
+    linear_pred = (
+        coef.age * cage
+        + coef.smoking * smoking
+        + coef.sbp * csbp
+        + coef.total_cholesterol * ctchol
+        + coef.hdl_cholesterol * chdl
+        + coef.smoking_age * smoking_age
+        + coef.sbp_age * sbp_age
+        + coef.tchol_age * tchol_age
+        + coef.hdl_age * hdl_age
+    )
 
     # Calculate uncalibrated risk
     uncalibrated_risk: float = 1 - np.power(baseline_survival, np.exp(linear_pred))
