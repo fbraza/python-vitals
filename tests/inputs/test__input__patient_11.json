@@ -7,45 +7,61 @@
         "laboratory": "NHANES Reference Labs"
     },
     "raw_biomarkers": {
-        "albumin": {
+        "albumin_g_dl": {
             "value": 4.8,
             "unit": "g/dL"
         },
-        "creatinine": {
+        "creatinine_mg_dl": {
             "value": 1.064,
             "unit": "mg/dL"
         },
-        "glucose": {
+        "glucose_mg_dl": {
             "value": 77.0,
             "unit": "mg/dL"
         },
-        "crp": {
+        "crp_mg_l": {
             "value": 2.1,
             "unit": "mg/L"
         },
-        "lymphocyte_percent": {
+        "lymphocyte_percent_%": {
             "value": 34.2,
             "unit": "%"
         },
-        "mean_cell_volume": {
+        "mean_cell_volume_fl": {
             "value": 96.6,
             "unit": "fL"
         },
-        "red_cell_distribution_width": {
+        "red_cell_distribution_width_%": {
             "value": 12.2,
             "unit": "%"
         },
-        "alkaline_phosphatase": {
+        "alkaline_phosphatase_u_l": {
             "value": 69.0,
             "unit": "U/L"
         },
-        "white_blood_cell_count": {
+        "white_blood_cell_count_1000_cells_ul": {
             "value": 5.05,
             "unit": "1000 cells/uL"
         },
-        "age": {
+        "age_years": {
             "value": 32,
             "unit": "years"
+        },
+        "glucose_mmol_l": {
+            "value": 4.2778,
+            "unit": "mmol/L"
+        },
+        "creatinine_umol_l": {
+            "value": 94.0576,
+            "unit": "umol/L"
+        },
+        "albumin_g_l": {
+            "value": 48.0,
+            "unit": "g/L"
+        },
+        "crp_mg_dl": {
+            "value": 0.21,
+            "unit": "mg/dL"
         }
     }
 }

@@ -1,0 +1,51 @@
+{
+    "metadata": {
+        "patient_id": "P001-2024-001",
+        "sex": "female",
+        "timestamp": "2024-06-15T08:30:00Z",
+        "test_date": "2024-06-15",
+        "laboratory": "Quest Diagnostics"
+    },
+    "raw_biomarkers": {
+        "albumin": {
+            "value": 4.05,
+            "unit": "g/dL"
+        },
+        "creatinine": {
+            "value": 1.17,
+            "unit": "mg/dL"
+        },
+        "glucose": {
+            "value": 70.5,
+            "unit": "mg/dL"
+        },
+        "crp": {
+            "value": 0.5,
+            "unit": "mg/dL"
+        },
+        "lymphocyte_percent": {
+            "value": 40.3,
+            "unit": "%"
+        },
+        "mean_cell_volume": {
+            "value": 89.1,
+            "unit": "fL"
+        },
+        "red_cell_distribution_width": {
+            "value": 11.9,
+            "unit": "%"
+        },
+        "alkaline_phosphatase": {
+            "value": 63.5,
+            "unit": "U/L"
+        },
+        "white_blood_cell_count": {
+            "value": 6.05,
+            "unit": "1000 cells/uL"
+        },
+        "age": {
+            "value": 39,
+            "unit": "years"
+        }
+    }
+}

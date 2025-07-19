@@ -1,0 +1,51 @@
+{
+    "metadata": {
+        "patient_id": "P002-2024-002",
+        "sex": "male",
+        "timestamp": "2024-06-20T14:15:00Z",
+        "test_date": "2024-06-20",
+        "laboratory": "LabCorp"
+    },
+    "raw_biomarkers": {
+        "albumin": {
+            "value": 4.0,
+            "unit": "g/dL"
+        },
+        "creatinine": {
+            "value": 0.584,
+            "unit": "mg/dL"
+        },
+        "glucose": {
+            "value": 109.0,
+            "unit": "mg/dL"
+        },
+        "crp": {
+            "value": 0.21,
+            "unit": "mg/dL"
+        },
+        "lymphocyte_percent": {
+            "value": 32.35,
+            "unit": "%"
+        },
+        "mean_cell_volume": {
+            "value": 92.4,
+            "unit": "fL"
+        },
+        "red_cell_distribution_width": {
+            "value": 12.05,
+            "unit": "%"
+        },
+        "alkaline_phosphatase": {
+            "value": 59,
+            "unit": "U/L"
+        },
+        "white_blood_cell_count": {
+            "value": 4.95,
+            "unit": "1000 cells/uL"
+        },
+        "age": {
+            "value": 40,
+            "unit": "years"
+        }
+    }
+}

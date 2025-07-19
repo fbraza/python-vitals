@@ -4,24 +4,24 @@ import pytest
 
 from vitals.score2 import compute
 
-OUT_FILEPATH = Path(__file__).parent / "outputs"
+OUT_FILEPATH = Path(__file__).parent / "inputs"
 
 
 @pytest.mark.parametrize(
     "filename,expected",
     [
-        ("test__output__patient_25.json", (50.00, 4.34, "Low to moderate")),
-        ("test__output__patient_26.json", (50.00, 6.31, "High")),
-        ("test__output__patient_27.json", (55.00, 2.10, "Low to moderate")),
-        ("test__output__patient_28.json", (45.00, 2.40, "Low to moderate")),
-        ("test__output__patient_29.json", (40.00, 4.30, "High")),
-        ("test__output__patient_30.json", (60.00, 4.20, "Low to moderate")),
-        ("test__output__patient_31.json", (65.00, 14.40, "Very high")),
-        ("test__output__patient_32.json", (69.00, 8.40, "High")),
-        ("test__output__patient_33.json", (49.00, 5.70, "High")),
-        ("test__output__patient_34.json", (50.00, 1.20, "Low to moderate")),
-        ("test__output__patient_35.json", (55.00, 8.70, "High")),
-        ("test__output__patient_36.json", (45.00, 2.60, "High")),
+        ("test__input__patient_25.json", (50.00, 4.34, "Low to moderate")),
+        ("test__input__patient_26.json", (50.00, 6.31, "High")),
+        ("test__input__patient_27.json", (55.00, 2.10, "Low to moderate")),
+        ("test__input__patient_28.json", (45.00, 2.40, "Low to moderate")),
+        ("test__input__patient_29.json", (40.00, 4.30, "High")),
+        ("test__input__patient_30.json", (60.00, 4.20, "Low to moderate")),
+        ("test__input__patient_31.json", (65.00, 14.40, "Very high")),
+        ("test__input__patient_32.json", (69.00, 8.40, "High")),
+        ("test__input__patient_33.json", (49.00, 5.70, "High")),
+        ("test__input__patient_34.json", (50.00, 1.20, "Low to moderate")),
+        ("test__input__patient_35.json", (55.00, 8.70, "High")),
+        ("test__input__patient_36.json", (45.00, 2.60, "High")),
     ],
 )
 def test_score2(filename, expected):
