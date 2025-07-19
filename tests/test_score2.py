@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from vitals.score2 import compute
+from vitals.models import score2
 
 OUT_FILEPATH = Path(__file__).parent / "inputs" / "score2"
 
@@ -26,9 +26,7 @@ OUT_FILEPATH = Path(__file__).parent / "inputs" / "score2"
 )
 def test_score2(filename, expected):
     # Get the actual fixture value using request.getfixturevalue
-    age, pred_risk, pred_risk_category = compute.cardiovascular_risk(
-        OUT_FILEPATH / filename
-    )
+    age, pred_risk, pred_risk_category = score2.compute(OUT_FILEPATH / filename)
     expected_age, expected_risk, expected_category = expected
 
     assert age == expected_age
