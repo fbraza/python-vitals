@@ -180,4 +180,4 @@ def cardiovascular_risk(filepath: str) -> tuple[float, float, str]:
         else:
             risk_category = "Very high"
 
-    return (age, round(calibrated_risk, 4), risk_category)
+    return (age, round(calibrated_risk, 2), risk_category)
