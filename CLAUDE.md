@@ -1,12 +1,15 @@
 # CLAUDE.md - Project Guidelines for Claude Code
 
 ## Project Overview
-This repository contains biomarker algorithms for health assessment, including PhenoAge and SCORE2 cardiovascular risk calculations.
+This repository contains biomarker algorithms for health assessment, including PhenoAge, SCORE2, and SCORE2-Diabetes cardiovascular risk calculations.
 
 ## Environment Setup
-**IMPORTANT**: Before starting work, ensure the virtual environment is activated:
+**IMPORTANT**: This project uses UV for dependency management. Before starting work:
 ```bash
-# Activate the virtual environment
+# Sync dependencies and activate virtual environment
+uv sync
+
+# Activate the virtual environment (if not automatically activated)
 source .venv/bin/activate
 ```
 
@@ -57,23 +60,27 @@ source .venv/bin/activate
 ```
 vitals/
 ├── biomarkers/          # Common biomarker utilities
-│   ├── schemas.py       # Pydantic models for biomarker data
 │   ├── helpers.py       # Helper functions for biomarker extraction
 │   └── io.py           # Input/output utilities
-├── phenoage/           # PhenoAge algorithm implementation
-│   └── compute.py      # PhenoAge calculation logic
-├── score2/             # SCORE2 CVD risk algorithm
-│   └── compute.py      # SCORE2 calculation logic
+├── models/             # Algorithm implementations
+│   ├── phenoage.py     # PhenoAge calculation logic
+│   ├── score2.py       # SCORE2 calculation logic
+│   └── score2_diabetes.py  # SCORE2-Diabetes calculation logic
+├── schemas/            # Pydantic models organized by algorithm
+│   ├── phenoage.py     # PhenoAge-specific schemas
+│   └── score2.py       # SCORE2 and SCORE2-Diabetes schemas
 └── specs/              # Project specifications
     ├── coding_style.md # Python coding style guide
-    └── score2.md       # SCORE2 algorithm specification
+    ├── score2.md       # SCORE2 algorithm specification
+    └── score2_diabetes.md  # SCORE2-Diabetes algorithm specification
 ```
 
 ## Development Workflow
 
 ### Before Starting Work
-1. Activate virtual environment: `source .venv/bin/activate`
-2. Ensure git hooks are installed: `make install` (this also installs pre-commit hooks)
+1. Sync dependencies: `uv sync`
+2. Activate virtual environment: `source .venv/bin/activate` (if not auto-activated)
+3. Ensure git hooks are installed: `make install` (this also installs pre-commit hooks)
 
 ### Running Tests
 ```bash
@@ -110,8 +117,9 @@ Before committing changes, ensure:
 
 ## Common Patterns
 - Use Pydantic BaseModel for data validation
-- Extract biomarkers using `helpers.extract_biomarkers_from_json()`
-- Follow the module structure established in phenoage when adding new algorithms
+- Extract biomarkers using `biomarkers.helpers.extract_biomarkers_from_json()`
+- Algorithm implementations go in `models/` directory
+- Algorithm-specific schemas go in `schemas/` directory
 - Use boolean types for binary values, not integers
 - Keep type hints simple and practical
 
@@ -124,7 +132,8 @@ When implementing new features:
 5. Run tests before committing: `make test`
 
 ## Important Notes
-- The Score2 implementation uses Belgium (Low Risk region) calibration by default
-- Binary values (sex, smoking) should use boolean types in schemas
+- The SCORE2 implementation uses Belgium (Low Risk region) calibration by default
+- The SCORE2-Diabetes implementation includes diabetes-specific risk adjustments
+- Binary values (sex, smoking, diabetes) should use boolean types in schemas
 - Always handle potential ValueError exceptions when extracting biomarkers
 - Balance code quality with pragmatism - don't overengineer solutions
