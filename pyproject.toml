@@ -16,9 +16,10 @@ dependencies = [
 dev = [
     "pytest",
     "pre-commit>=4.2.0",
-    "black",
     "coverage",
     "ipython>=9.3.0",
+    "ruff",
+    "ty"
 ]
 
 [build-system]
