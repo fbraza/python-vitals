@@ -2,7 +2,7 @@ from pathlib import Path
 
 import numpy as np
 
-from vitals.biomarkers import exceptions, helpers
+from vitals.biomarkers import helpers
 from vitals.schemas.phenoage import Gompertz, LinearModel, Markers, Units
 
 
@@ -14,14 +14,13 @@ def compute(filepath: str | Path) -> tuple[float, float, float] | None:
     and another for chronological age. Thus, PhenoAge represents the expected age within the population that
     corresponds to a person’s estimated hazard of mortality as a function of his/her biological profile.
     """
-    # Extract biomarkers from JSON file
-    try:
-        biomarkers = helpers.extract_biomarkers_from_json(
-            filepath=filepath,
-            biomarker_class=Markers,
-            biomarker_units=Units(),
-        )
-    except exceptions.BiomarkerNotFound:
+    # Validate biomarkers are available for PhenoAge algorithm
+    biomarkers = helpers.validate_biomarkers_for_algorithm(
+        filepath=filepath,
+        biomarker_class=Markers,
+        biomarker_units=Units(),
+    )
+    if biomarkers is None:
         return None
 
     age: float = biomarkers.age

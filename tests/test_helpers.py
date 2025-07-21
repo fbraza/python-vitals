@@ -1,8 +1,6 @@
 from pathlib import Path
 
-import pytest
-
-from vitals.biomarkers import exceptions, helpers
+from vitals.biomarkers import helpers
 from vitals.schemas import phenoage, score2
 
 INP_FILEPATH_PHENOAGE: Path = Path(__file__).parent / "inputs" / "phenoage"
@@ -10,12 +8,14 @@ INP_FILEPATH_SCORE2: Path = Path(__file__).parent / "inputs" / "score2"
 INP_FILEPATH_INVALID: Path = Path(__file__).parent / "inputs" / "invalid"
 
 
-def test_extract_biomarkers_from_json_valid_phenoage():
-    """Test successful extraction of PhenoAge biomarkers."""
+def test_validate_biomarkers_for_algorithm_valid_phenoage():
+    """Test successful validation of PhenoAge biomarkers."""
     filepath = INP_FILEPATH_PHENOAGE / "test__input__patient_01.json"
     units = phenoage.Units()
 
-    result = helpers.extract_biomarkers_from_json(filepath, phenoage.Markers, units)
+    result = helpers.validate_biomarkers_for_algorithm(
+        filepath, phenoage.Markers, units
+    )
 
     assert isinstance(result, phenoage.Markers)
     assert result.albumin == 40.5  # g/L
@@ -30,12 +30,12 @@ def test_extract_biomarkers_from_json_valid_phenoage():
     assert result.age == 39  # years
 
 
-def test_extract_biomarkers_from_json_valid_score2():
-    """Test successful extraction of SCORE2 biomarkers."""
+def test_validate_biomarkers_for_algorithm_valid_score2():
+    """Test successful validation of SCORE2 biomarkers."""
     filepath = INP_FILEPATH_SCORE2 / "test__input__patient_25.json"
     units = score2.Units()
 
-    result = helpers.extract_biomarkers_from_json(filepath, score2.Markers, units)
+    result = helpers.validate_biomarkers_for_algorithm(filepath, score2.Markers, units)
 
     assert isinstance(result, score2.Markers)
     assert result.age == 50
@@ -46,25 +46,21 @@ def test_extract_biomarkers_from_json_valid_score2():
     assert result.is_male is False
 
 
-def test_extract_biomarkers_from_json_missing_phenoage_biomarker():
-    """Test extraction fails when required PhenoAge biomarker is missing."""
+def test_validate_biomarkers_for_algorithm_missing_phenoage_biomarker():
+    """Test validation returns None when required PhenoAge biomarker is missing."""
     filepath = INP_FILEPATH_INVALID / "test__phenoage_missing_albumin.json"
     units = phenoage.Units()
 
-    with pytest.raises(
-        exceptions.BiomarkerNotFound,
-        match="Biomarker 'albumin' not found : Stop computation",
-    ):
-        helpers.extract_biomarkers_from_json(filepath, phenoage.Markers, units)
+    result = helpers.validate_biomarkers_for_algorithm(
+        filepath, phenoage.Markers, units
+    )
+    assert result is None
 
 
-def test_extract_biomarkers_from_json_missing_score2_biomarker():
-    """Test extraction fails when required SCORE2 biomarker is missing."""
+def test_validate_biomarkers_for_algorithm_missing_score2_biomarker():
+    """Test validation returns None when required SCORE2 biomarker is missing."""
     filepath = INP_FILEPATH_INVALID / "test__score2_missing_sbp.json"
     units = score2.Units()
 
-    with pytest.raises(
-        exceptions.BiomarkerNotFound,
-        match="Biomarker 'systolic_blood_pressure' not found : Stop computation",
-    ):
-        helpers.extract_biomarkers_from_json(filepath, score2.Markers, units)
+    result = helpers.validate_biomarkers_for_algorithm(filepath, score2.Markers, units)
+    assert result is None

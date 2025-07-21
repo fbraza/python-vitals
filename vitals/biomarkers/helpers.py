@@ -1,25 +1,16 @@
 import json
 from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Literal, TypeAlias, TypedDict, TypeVar
+from typing import Any, Literal, TypeAlias, TypeVar
 
 import numpy as np
 from pydantic import BaseModel
 
-from vitals.biomarkers.exceptions import BiomarkerNotFound
 from vitals.schemas import phenoage, score2
 
 RiskCategory: TypeAlias = Literal["Low to moderate", "High", "Very high"]
 Biomarkers = TypeVar("Biomarkers", bound=BaseModel)
 Units = phenoage.Units | score2.Units | score2.UnitsDiabetes
-
-
-class ConversionInfo(TypedDict):
-    """Type definition for biomarker conversion information."""
-
-    target_name: str
-    target_unit: str
-    conversion: Callable[[float], float]
 
 
 def add_converted_biomarkers(biomarkers: dict[str, Any]) -> dict[str, Any]:
@@ -69,13 +60,13 @@ def add_converted_biomarkers(biomarkers: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
-def extract_biomarkers_from_json(
+def validate_biomarkers_for_algorithm(
     filepath: str | Path,
     biomarker_class: type[Biomarkers],
     biomarker_units: Units,
-) -> Biomarkers:
+) -> Biomarkers | None:
     """
-    Generic function to extract biomarkers from JSON file based on a Pydantic model.
+    Validate if all required biomarkers are available for a specific algorithm.
 
     Args:
         filepath: Path to JSON file containing biomarker data
@@ -83,10 +74,8 @@ def extract_biomarkers_from_json(
         biomarker_units: Pydantic model instance containing expected units
 
     Returns:
-        Instance of biomarker_class with extracted biomarker values
-
-    Raises:
-        BiomarkerNotFound: If required biomarker is not found with expected unit
+        Instance of biomarker_class with extracted biomarker values if all required
+        biomarkers are present, None if any are missing
     """
     with open(filepath) as f:
         data = json.load(f)
@@ -97,14 +86,14 @@ def extract_biomarkers_from_json(
 
     # Build biomarkers dictionary using comprehension
     biomarkers_for_scoring = {
-        field: raw_biomarkers.get(field, {}).get(expected_units_dict[field])
+        field: raw_biomarkers.get(field, {}).get(expected_units_dict[field], None)
         for field in required_fields
     }
 
-    # Check for missing biomarkers and raise appropriate errors
+    # Check for missing biomarkers and return None if any are missing
     for field, value in biomarkers_for_scoring.items():
         if value is None:
-            raise BiomarkerNotFound(f"Biomarker '{field}' not found : Stop computation")
+            return None
 
     return biomarker_class(**biomarkers_for_scoring)
 

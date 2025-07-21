@@ -10,7 +10,7 @@ from pathlib import Path
 
 import numpy as np
 
-from vitals.biomarkers import exceptions, helpers
+from vitals.biomarkers import helpers
 from vitals.schemas.score2 import (
     BaselineSurvival,
     CalibrationScales,
@@ -45,14 +45,13 @@ def compute(
     Raises:
         ValueError: If invalid biomarker class is used
     """
-    # Extract biomarkers from JSON file
-    try:
-        biomarkers = helpers.extract_biomarkers_from_json(
-            filepath=filepath,
-            biomarker_class=MarkersDiabetes,
-            biomarker_units=UnitsDiabetes(),
-        )
-    except exceptions.BiomarkerNotFound:
+    # Validate biomarkers are available for SCORE2-Diabetes algorithm
+    biomarkers = helpers.validate_biomarkers_for_algorithm(
+        filepath=filepath,
+        biomarker_class=MarkersDiabetes,
+        biomarker_units=UnitsDiabetes(),
+    )
+    if biomarkers is None:
         return None
 
     age: float = biomarkers.age
