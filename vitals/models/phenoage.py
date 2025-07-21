@@ -27,7 +27,6 @@ def compute(filepath: str | Path) -> tuple[float, float, float] | None:
     age: float = biomarkers.age
     coef: LinearModel = LinearModel()
 
-    # if isinstance(biomarkers, Markers):
     weighted_risk_score = (
         coef.intercept
         + (coef.albumin * biomarkers.albumin)
@@ -46,5 +45,3 @@ def compute(filepath: str | Path) -> tuple[float, float, float] | None:
     pred_age = model.coef1 + np.log(model.coef2 * np.log(1 - gompertz)) / model.coef3
     accl_age = pred_age - age
     return (age, pred_age, accl_age)
-    # else:
-    #     raise ValueError(f"Invalid biomarker class used: {biomarkers}")

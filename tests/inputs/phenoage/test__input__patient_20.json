@@ -7,61 +7,39 @@
         "laboratory": "NHANES Reference Labs"
     },
     "raw_biomarkers": {
-        "albumin_g_dl": {
-            "value": 5.0,
-            "unit": "g/dL"
+        "albumin": {
+            "g/dL": 5.0,
+            "g/L": 50.0
         },
-        "creatinine_mg_dl": {
-            "value": 0.68,
-            "unit": "mg/dL"
+        "creatinine": {
+            "mg/dL": 0.68,
+            "umol/L": 60.112
         },
-        "glucose_mg_dl": {
-            "value": 71.0,
-            "unit": "mg/dL"
+        "glucose": {
+            "mg/dL": 71.0,
+            "mmol/L": 3.9444
         },
-        "crp_mg_l": {
-            "value": 2.1,
-            "unit": "mg/L"
+        "crp": {
+            "mg/L": 2.1,
+            "mg/dL": 0.21
         },
-        "lymphocyte_percent_%": {
-            "value": 29.25,
-            "unit": "%"
+        "lymphocyte_percent": {
+            "%": 29.25
         },
-        "mean_cell_volume_fl": {
-            "value": 88.75,
-            "unit": "fL"
+        "mean_cell_volume": {
+            "fL": 88.75
         },
-        "red_cell_distribution_width_%": {
-            "value": 12.7,
-            "unit": "%"
+        "red_cell_distribution_width": {
+            "%": 12.7
         },
-        "alkaline_phosphatase_u_l": {
-            "value": 91.0,
-            "unit": "U/L"
+        "alkaline_phosphatase": {
+            "U/L": 91.0
         },
-        "white_blood_cell_count_1000_cells_ul": {
-            "value": 4.45,
-            "unit": "1000 cells/uL"
+        "white_blood_cell_count": {
+            "1000 cells/uL": 4.45
         },
-        "age_years": {
-            "value": 32,
-            "unit": "years"
-        },
-        "glucose_mmol_l": {
-            "value": 3.9444,
-            "unit": "mmol/L"
-        },
-        "creatinine_umol_l": {
-            "value": 60.112,
-            "unit": "umol/L"
-        },
-        "albumin_g_l": {
-            "value": 50.0,
-            "unit": "g/L"
-        },
-        "crp_mg_dl": {
-            "value": 0.21,
-            "unit": "mg/dL"
+        "age": {
+            "years": 32
         }
     }
 }

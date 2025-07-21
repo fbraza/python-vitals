@@ -22,66 +22,23 @@ class ConversionInfo(TypedDict):
     conversion: Callable[[float], float]
 
 
-def format_unit_suffix(unit: str) -> str:
-    """Convert unit string to a valid suffix format.
-
-    Args:
-        unit: Unit string (e.g., "mg/dL", "1000 cells/uL")
-
-    Returns:
-        Formatted suffix (e.g., "mg_dl", "1000_cells_ul")
-    """
-    # Replace special characters with underscores
-    suffix = unit.lower()
-    suffix = suffix.replace("/", "_")
-    suffix = suffix.replace(" ", "_")
-    suffix = suffix.replace("^", "")
-    return suffix
-
-
-def update_biomarker_names(biomarkers: dict[str, Any]) -> dict[str, Any]:
-    """Update biomarker names to include unit suffixes.
-
-    Args:
-        biomarkers: Dictionary of biomarker data with value and unit
-
-    Returns:
-        Updated dictionary with unit-suffixed biomarker names
-    """
-    updated_biomarkers = {}
-
-    for name, data in biomarkers.items():
-        if isinstance(data, dict) and "unit" in data:
-            unit_suffix = format_unit_suffix(data["unit"])
-            new_name = f"{name}_{unit_suffix}"
-            updated_biomarkers[new_name] = data
-        else:
-            # Keep as is if not in expected format
-            updated_biomarkers[name] = data
-
-    return updated_biomarkers
-
-
 def find_biomarker_value(
     raw_biomarkers: dict[str, Any], biomarker_name: str, expected_unit: str
 ) -> float | None:
     """
-    Find biomarker value by name prefix and expected unit.
+    Find biomarker value by name and unit.
 
     Args:
         raw_biomarkers: Dictionary of biomarker data
-        biomarker_name: Name of biomarker to find (without unit suffix)
+        biomarker_name: Name of biomarker to find
         expected_unit: Expected unit for this biomarker
 
     Returns:
         Biomarker value if found, None otherwise
     """
-    for key, biomarker_data in raw_biomarkers.items():
-        if key.startswith(biomarker_name) and isinstance(biomarker_data, dict):
-            unit = biomarker_data.get("unit", "")
-            if unit == expected_unit:
-                return biomarker_data.get("value")
-
+    biomarker = raw_biomarkers.get(biomarker_name, {})
+    if isinstance(biomarker, dict):
+        return biomarker.get(expected_unit)
     return None
 
 
@@ -89,71 +46,45 @@ def add_converted_biomarkers(biomarkers: dict[str, Any]) -> dict[str, Any]:
     """Add converted biomarker entries for glucose, creatinine, albumin, and CRP.
 
     Args:
-        biomarkers: Dictionary of biomarkers with unit-suffixed names
+        biomarkers: Dictionary of biomarkers with unit-keyed values
 
     Returns:
         Dictionary with original and converted biomarkers
     """
-    # Copy original biomarkers
-    result = biomarkers.copy()
+    # Deep copy to avoid modifying original
+    result = {k: v.copy() if isinstance(v, dict) else v for k, v in biomarkers.items()}
 
-    # Conversion mappings
-    conversions: dict[str, ConversionInfo] = {
-        "glucose_mg_dl": {
-            "target_name": "glucose_mmol_l",
-            "target_unit": "mmol/L",
-            "conversion": lambda x: x / 18.0,
-        },
-        "glucose_mmol_l": {
-            "target_name": "glucose_mg_dl",
-            "target_unit": "mg/dL",
-            "conversion": lambda x: x * 18.0,
-        },
-        "creatinine_mg_dl": {
-            "target_name": "creatinine_umol_l",
-            "target_unit": "umol/L",
-            "conversion": lambda x: x * 88.4,
-        },
-        "creatinine_umol_l": {
-            "target_name": "creatinine_mg_dl",
-            "target_unit": "mg/dL",
-            "conversion": lambda x: x / 88.4,
-        },
-        "albumin_g_dl": {
-            "target_name": "albumin_g_l",
-            "target_unit": "g/L",
-            "conversion": lambda x: x * 10.0,
-        },
-        "albumin_g_l": {
-            "target_name": "albumin_g_dl",
-            "target_unit": "g/dL",
-            "conversion": lambda x: x / 10.0,
-        },
-        "crp_mg_l": {
-            "target_name": "crp_mg_dl",
-            "target_unit": "mg/dL",
-            "conversion": lambda x: x / 10.0,
-        },
-        "crp_mg_dl": {
-            "target_name": "crp_mg_l",
-            "target_unit": "mg/L",
-            "conversion": lambda x: x * 10.0,
-        },
+    # Conversion mappings: biomarker -> [(source_unit, target_unit, conversion_func)]
+    conversions = {
+        "glucose": [
+            ("mg/dL", "mmol/L", lambda x: x / 18.0),
+            ("mmol/L", "mg/dL", lambda x: x * 18.0),
+        ],
+        "creatinine": [
+            ("mg/dL", "umol/L", lambda x: x * 88.4),
+            ("umol/L", "mg/dL", lambda x: x / 88.4),
+        ],
+        "albumin": [
+            ("g/dL", "g/L", lambda x: x * 10.0),
+            ("g/L", "g/dL", lambda x: x / 10.0),
+        ],
+        "crp": [
+            ("mg/L", "mg/dL", lambda x: x / 10.0),
+            ("mg/dL", "mg/L", lambda x: x * 10.0),
+        ],
     }
 
     # Add converted entries
-    for source_name, conversion_info in conversions.items():
-        if source_name in biomarkers:
-            source_value = biomarkers[source_name]["value"]
-            target_name = conversion_info["target_name"]
-
-            # Skip if target already exists
-            if target_name not in result:
-                converted_value = conversion_info["conversion"](source_value)
-                result[target_name] = {
-                    "value": round(converted_value, 4),
-                    "unit": conversion_info["target_unit"],
-                }
+    for biomarker_name, conversion_list in conversions.items():
+        if biomarker_name in result and isinstance(result[biomarker_name], dict):
+            for source_unit, target_unit, conversion_func in conversion_list:
+                if (
+                    source_unit in result[biomarker_name]
+                    and target_unit not in result[biomarker_name]
+                ):
+                    source_value = result[biomarker_name][source_unit]
+                    converted_value = round(conversion_func(source_value), 4)
+                    result[biomarker_name][target_unit] = converted_value
 
     return result
 

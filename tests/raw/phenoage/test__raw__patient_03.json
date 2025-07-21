@@ -8,44 +8,34 @@
     },
     "raw_biomarkers": {
         "albumin": {
-            "value": 4.1,
-            "unit": "g/dL"
+            "g/dL": 4.1
         },
         "creatinine": {
-            "value": 0.584,
-            "unit": "mg/dL"
+            "mg/dL": 0.584
         },
         "glucose": {
-            "value": 89.0,
-            "unit": "mg/dL"
+            "mg/dL": 89.0
         },
         "crp": {
-            "value": 0.21,
-            "unit": "mg/dL"
+            "mg/dL": 0.21
         },
         "lymphocyte_percent": {
-            "value": 43.85,
-            "unit": "%"
+            "%": 43.85
         },
         "mean_cell_volume": {
-            "value": 91.9,
-            "unit": "fL"
+            "fL": 91.9
         },
         "red_cell_distribution_width": {
-            "value": 12.7,
-            "unit": "%"
+            "%": 12.7
         },
         "alkaline_phosphatase": {
-            "value": 96,
-            "unit": "U/L"
+            "U/L": 96
         },
         "white_blood_cell_count": {
-            "value": 4.7,
-            "unit": "1000 cells/uL"
+            "1000 cells/uL": 4.7
         },
         "age": {
-            "value": 80,
-            "unit": "years"
+            "years": 80
         }
     }
 }

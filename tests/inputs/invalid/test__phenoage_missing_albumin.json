@@ -7,53 +7,35 @@
         "laboratory": "Test Lab"
     },
     "raw_biomarkers": {
-        "creatinine_mg_dl": {
-            "value": 1.17,
-            "unit": "mg/dL"
+        "creatinine": {
+            "mg/dL": 1.17,
+            "umol/L": 103.428
         },
-        "glucose_mg_dl": {
-            "value": 70.5,
-            "unit": "mg/dL"
+        "glucose": {
+            "mg/dL": 70.5,
+            "mmol/L": 3.9167
         },
-        "crp_mg_dl": {
-            "value": 0.5,
-            "unit": "mg/dL"
+        "crp": {
+            "mg/dL": 0.5,
+            "mg/L": 5.0
         },
-        "lymphocyte_percent_%": {
-            "value": 40.3,
-            "unit": "%"
+        "lymphocyte_percent": {
+            "%": 40.3
         },
-        "mean_cell_volume_fl": {
-            "value": 89.1,
-            "unit": "fL"
+        "mean_cell_volume": {
+            "fL": 89.1
         },
-        "red_cell_distribution_width_%": {
-            "value": 11.9,
-            "unit": "%"
+        "red_cell_distribution_width": {
+            "%": 11.9
         },
-        "alkaline_phosphatase_u_l": {
-            "value": 63.5,
-            "unit": "U/L"
+        "alkaline_phosphatase": {
+            "U/L": 63.5
         },
-        "white_blood_cell_count_1000_cells_ul": {
-            "value": 6.05,
-            "unit": "1000 cells/uL"
+        "white_blood_cell_count": {
+            "1000 cells/uL": 6.05
         },
-        "age_years": {
-            "value": 39,
-            "unit": "years"
-        },
-        "glucose_mmol_l": {
-            "value": 3.9167,
-            "unit": "mmol/L"
-        },
-        "creatinine_umol_l": {
-            "value": 103.428,
-            "unit": "umol/L"
-        },
-        "crp_mg_l": {
-            "value": 5.0,
-            "unit": "mg/L"
+        "age": {
+            "years": 39
         }
     }
 }

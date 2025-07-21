@@ -7,25 +7,20 @@
         "laboratory": "Test Lab"
     },
     "raw_biomarkers": {
-        "age_years": {
-            "value": 50,
-            "unit": "years"
+        "age": {
+            "years": 50
         },
-        "smoking_yes_no": {
-            "value": true,
-            "unit": "yes/no"
+        "smoking": {
+            "yes/no": true
         },
-        "total_cholesterol_mmol_l": {
-            "value": 6.3,
-            "unit": "mmol/L"
+        "total_cholesterol": {
+            "mmol/L": 6.3
         },
-        "hdl_cholesterol_mmol_l": {
-            "value": 1.4,
-            "unit": "mmol/L"
+        "hdl_cholesterol": {
+            "mmol/L": 1.4
         },
-        "is_male_yes_no": {
-            "value": false,
-            "unit": "yes/no"
+        "is_male": {
+            "yes/no": false
         }
     }
 }

@@ -10,7 +10,7 @@ from pathlib import Path
 
 import numpy as np
 
-from vitals.biomarkers import helpers
+from vitals.biomarkers import exceptions, helpers
 from vitals.schemas.score2 import (
     BaselineSurvival,
     CalibrationScales,
@@ -23,7 +23,7 @@ from vitals.schemas.score2 import (
 
 def compute(
     filepath: str | Path,
-) -> tuple[float, float, helpers.RiskCategory]:
+) -> tuple[float, float, helpers.RiskCategory] | None:
     """
     Calculate the 10-year cardiovascular disease risk using the SCORE2-Diabetes algorithm.
 
@@ -46,14 +46,14 @@ def compute(
         ValueError: If invalid biomarker class is used
     """
     # Extract biomarkers from JSON file
-    biomarkers = helpers.extract_biomarkers_from_json(
-        filepath=filepath,
-        biomarker_class=MarkersDiabetes,
-        biomarker_units=UnitsDiabetes(),
-    )
-
-    if not isinstance(biomarkers, MarkersDiabetes):
-        raise ValueError(f"Invalid biomarker class used: {biomarkers}")
+    try:
+        biomarkers = helpers.extract_biomarkers_from_json(
+            filepath=filepath,
+            biomarker_class=MarkersDiabetes,
+            biomarker_units=UnitsDiabetes(),
+        )
+    except exceptions.BiomarkerNotFound:
+        return None
 
     age: float = biomarkers.age
     is_male: bool = biomarkers.is_male  # True for male, False for female
