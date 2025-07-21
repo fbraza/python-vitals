@@ -22,24 +22,6 @@ class ConversionInfo(TypedDict):
     conversion: Callable[[float], float]
 
 
-def find_biomarker_value(
-    raw_biomarkers: dict[str, Any], biomarker_name: str, expected_unit: str
-) -> float | None:
-    """
-    Find biomarker value by name and unit.
-
-    Args:
-        raw_biomarkers: Dictionary of biomarker data
-        biomarker_name: Name of biomarker to find
-        expected_unit: Expected unit for this biomarker
-
-    Returns:
-        Biomarker value if found, None otherwise
-    """
-    biomarker = raw_biomarkers.get(biomarker_name, {})
-    return biomarker.get(expected_unit)
-
-
 def add_converted_biomarkers(biomarkers: dict[str, Any]) -> dict[str, Any]:
     """Add converted biomarker entries for glucose, creatinine, albumin, and CRP.
 
@@ -53,7 +35,7 @@ def add_converted_biomarkers(biomarkers: dict[str, Any]) -> dict[str, Any]:
     result = {k: v.copy() for k, v in biomarkers.items()}
 
     # Conversion mappings: biomarker -> [(source_unit, target_unit, conversion_func)]
-    conversions = {
+    conversions: dict[str, list[tuple[str, str, Callable]]] = {
         "glucose": [
             ("mg/dL", "mmol/L", lambda x: x / 18.0),
             ("mmol/L", "mg/dL", lambda x: x * 18.0),
@@ -97,40 +79,34 @@ def extract_biomarkers_from_json(
 
     Args:
         filepath: Path to JSON file containing biomarker data
-        model_class: Pydantic model class defining required biomarkers
-        units_model: Pydantic model instance containing expected units
+        biomarker_class: Pydantic model class defining required biomarkers
+        biomarker_units: Pydantic model instance containing expected units
 
     Returns:
-        Instance of model_class with extracted biomarker values
+        Instance of biomarker_class with extracted biomarker values
 
     Raises:
-        ValueError: If required biomarker is not found with expected unit
+        BiomarkerNotFound: If required biomarker is not found with expected unit
     """
     with open(filepath) as f:
         data = json.load(f)
 
     raw_biomarkers = data.get("raw_biomarkers", {})
     expected_units_dict = biomarker_units.model_dump()
-
-    # Get required biomarker field names from model
     required_fields = biomarker_class.model_fields
-    extracted_values = {}
 
-    for field_name in required_fields:
-        expected_unit = expected_units_dict.get(field_name)
-        if expected_unit is None:
-            raise ValueError(f"No expected unit defined for {field_name}")
+    # Build biomarkers dictionary using comprehension
+    biomarkers_for_scoring = {
+        field: raw_biomarkers.get(field, {}).get(expected_units_dict[field])
+        for field in required_fields
+    }
 
-        value: int | float | None = find_biomarker_value(
-            raw_biomarkers, field_name, expected_unit
-        )
+    # Check for missing biomarkers and raise appropriate errors
+    for field, value in biomarkers_for_scoring.items():
         if value is None:
-            raise BiomarkerNotFound(
-                f"Biomarker '{field_name}' not found : Stop computation"
-            )
-        extracted_values[field_name] = value
+            raise BiomarkerNotFound(f"Biomarker '{field}' not found : Stop computation")
 
-    return biomarker_class(**extracted_values)
+    return biomarker_class(**biomarkers_for_scoring)
 
 
 def determine_risk_category(age: float, calibrated_risk: float) -> RiskCategory:
