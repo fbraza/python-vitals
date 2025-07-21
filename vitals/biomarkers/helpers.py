@@ -1,3 +1,4 @@
+import json
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any, Literal, TypeAlias, TypedDict, TypeVar
@@ -5,6 +6,7 @@ from typing import Any, Literal, TypeAlias, TypedDict, TypeVar
 import numpy as np
 from pydantic import BaseModel
 
+from vitals.biomarkers.exceptions import BiomarkerNotFound
 from vitals.schemas import phenoage, score2
 
 RiskCategory: TypeAlias = Literal["Low to moderate", "High", "Very high"]
@@ -175,8 +177,6 @@ def extract_biomarkers_from_json(
     Raises:
         ValueError: If required biomarker is not found with expected unit
     """
-    import json
-
     with open(filepath) as f:
         data = json.load(f)
 
@@ -192,10 +192,12 @@ def extract_biomarkers_from_json(
         if expected_unit is None:
             raise ValueError(f"No expected unit defined for {field_name}")
 
-        value = find_biomarker_value(raw_biomarkers, field_name, expected_unit)
+        value: int | float | None = find_biomarker_value(
+            raw_biomarkers, field_name, expected_unit
+        )
         if value is None:
-            raise ValueError(
-                f"Could not find {field_name} biomarker with unit {expected_unit}"
+            raise BiomarkerNotFound(
+                f"Biomarker '{field_name}' not found : Stop computation"
             )
         extracted_values[field_name] = value
 

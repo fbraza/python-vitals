@@ -1,0 +1,31 @@
+{
+    "metadata": {
+        "patient_id": "P998-2024-998",
+        "sex": "female",
+        "timestamp": "2024-07-04T13:45:00Z",
+        "test_date": "2024-07-04",
+        "laboratory": "Test Lab"
+    },
+    "raw_biomarkers": {
+        "age_years": {
+            "value": 50,
+            "unit": "years"
+        },
+        "smoking_yes_no": {
+            "value": true,
+            "unit": "yes/no"
+        },
+        "total_cholesterol_mmol_l": {
+            "value": 6.3,
+            "unit": "mmol/L"
+        },
+        "hdl_cholesterol_mmol_l": {
+            "value": 1.4,
+            "unit": "mmol/L"
+        },
+        "is_male_yes_no": {
+            "value": false,
+            "unit": "yes/no"
+        }
+    }
+}
