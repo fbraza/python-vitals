@@ -37,9 +37,7 @@ def find_biomarker_value(
         Biomarker value if found, None otherwise
     """
     biomarker = raw_biomarkers.get(biomarker_name, {})
-    if isinstance(biomarker, dict):
-        return biomarker.get(expected_unit)
-    return None
+    return biomarker.get(expected_unit)
 
 
 def add_converted_biomarkers(biomarkers: dict[str, Any]) -> dict[str, Any]:
@@ -52,7 +50,7 @@ def add_converted_biomarkers(biomarkers: dict[str, Any]) -> dict[str, Any]:
         Dictionary with original and converted biomarkers
     """
     # Deep copy to avoid modifying original
-    result = {k: v.copy() if isinstance(v, dict) else v for k, v in biomarkers.items()}
+    result = {k: v.copy() for k, v in biomarkers.items()}
 
     # Conversion mappings: biomarker -> [(source_unit, target_unit, conversion_func)]
     conversions = {
@@ -76,7 +74,7 @@ def add_converted_biomarkers(biomarkers: dict[str, Any]) -> dict[str, Any]:
 
     # Add converted entries
     for biomarker_name, conversion_list in conversions.items():
-        if biomarker_name in result and isinstance(result[biomarker_name], dict):
+        if biomarker_name in result:
             for source_unit, target_unit, conversion_func in conversion_list:
                 if (
                     source_unit in result[biomarker_name]
