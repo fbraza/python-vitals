@@ -15,11 +15,8 @@ def update(input_file: Path) -> dict[str, Any]:
     with open(input_file) as f:
         data = json.load(f)
 
-    # Update biomarker names with unit suffixes
+    # Add converted biomarkers
     if "raw_biomarkers" in data:
-        data["raw_biomarkers"] = helpers.update_biomarker_names(data["raw_biomarkers"])
-
-        # Add converted biomarkers
         data["raw_biomarkers"] = helpers.add_converted_biomarkers(
             data["raw_biomarkers"]
         )

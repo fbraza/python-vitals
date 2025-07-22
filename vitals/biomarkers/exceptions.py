@@ -1,0 +1,2 @@
+class BiomarkerNotFound(Exception):
+    pass

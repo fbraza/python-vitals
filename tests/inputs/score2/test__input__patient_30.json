@@ -7,29 +7,23 @@
         "laboratory": "NHANES Reference Labs"
     },
     "raw_biomarkers": {
-        "age_years": {
-            "value": 60,
-            "unit": "years"
+        "age": {
+            "years": 60
         },
-        "smoking_yes_no": {
-            "value": false,
-            "unit": "yes/no"
+        "smoking": {
+            "yes/no": false
         },
-        "systolic_blood_pressure_mmhg": {
-            "value": 145,
-            "unit": "mmHg"
+        "systolic_blood_pressure": {
+            "mmHg": 145
         },
-        "total_cholesterol_mmol_l": {
-            "value": 6.5,
-            "unit": "mmol/L"
+        "total_cholesterol": {
+            "mmol/L": 6.5
         },
-        "hdl_cholesterol_mmol_l": {
-            "value": 1.5,
-            "unit": "mmol/L"
+        "hdl_cholesterol": {
+            "mmol/L": 1.5
         },
-        "is_male_yes_no": {
-            "value": false,
-            "unit": "yes/no"
+        "is_male": {
+            "yes/no": false
         }
     }
 }

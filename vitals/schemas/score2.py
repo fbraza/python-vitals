@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 # Common for all models
@@ -44,6 +46,39 @@ class Markers(BaseModel):
     hdl_cholesterol: float
     smoking: bool
     is_male: bool
+    diabetes: bool | None
+    age_at_diabetes_diagnosis: float | None
+    hba1c: float | None
+    egfr: float | None
+
+
+class DiabetesMarkers(Markers):
+    """Markers with guaranteed non-None diabetes fields for SCORE2-Diabetes algorithm."""
+
+    # Override the optional diabetes fields to be required
+    diabetes: bool
+    age_at_diabetes_diagnosis: float
+    hba1c: float
+    egfr: float
+
+    @classmethod
+    def try_from_markers(cls, markers: Markers) -> Optional["DiabetesMarkers"]:
+        """Factory method to safely create DiabetesMarkers from unified Markers.
+
+        Args:
+            markers: Unified Markers instance with potentially None diabetes fields
+
+        Returns:
+            DiabetesMarkers instance if all diabetes fields are present and not None,
+            None otherwise
+        """
+        marker_dict = markers.model_dump()
+
+        # Check if all diabetes fields are present and not None
+        diabetes_fields = ["diabetes", "age_at_diabetes_diagnosis", "hba1c", "egfr"]
+        if all(marker_dict.get(field) is not None for field in diabetes_fields):
+            return cls(**marker_dict)
+        return None
 
 
 class Units(BaseModel):
@@ -57,6 +92,10 @@ class Units(BaseModel):
     hdl_cholesterol: str = "mmol/L"
     smoking: str = "yes/no"
     is_male: str = "yes/no"
+    diabetes: str = "yes/no"
+    age_at_diabetes_diagnosis: str = "years"
+    hba1c: str = "mmol/mol"
+    egfr: str = "mL/min/1.73m²"
 
 
 class MaleCoefficientsBaseModel(BaseModel):
@@ -100,36 +139,36 @@ class FemaleCoefficientsBaseModel(BaseModel):
 # ----- For Diabetic score2 model
 
 
-class MarkersDiabetes(BaseModel):
-    """Processed Score2-Diabetes biomarkers with standardized units."""
+# class MarkersDiabetes(BaseModel):
+#     """Processed Score2-Diabetes biomarkers with standardized units."""
 
-    age: float
-    systolic_blood_pressure: float
-    total_cholesterol: float
-    hdl_cholesterol: float
-    smoking: bool
-    is_male: bool
-    diabetes: bool
-    age_at_diabetes_diagnosis: float
-    hba1c: float
-    egfr: float
+#     age: float
+#     systolic_blood_pressure: float
+#     total_cholesterol: float
+#     hdl_cholesterol: float
+#     smoking: bool
+#     is_male: bool
+#     diabetes: bool
+#     age_at_diabetes_diagnosis: float
+#     hba1c: float
+#     egfr: float
 
 
-class UnitsDiabetes(BaseModel):
-    """
-    The expected unit to be used for Score2-Diabetes computation
-    """
+# class UnitsDiabetes(BaseModel):
+#     """
+#     The expected unit to be used for Score2-Diabetes computation
+#     """
 
-    age: str = "years"
-    systolic_blood_pressure: str = "mmHg"
-    total_cholesterol: str = "mmol/L"
-    hdl_cholesterol: str = "mmol/L"
-    smoking: str = "yes/no"
-    is_male: str = "yes/no"
-    diabetes: str = "yes/no"
-    age_at_diabetes_diagnosis: str = "years"
-    hba1c: str = "mmol/mol"
-    egfr: str = "mL/min/1.73m²"
+#     age: str = "years"
+#     systolic_blood_pressure: str = "mmHg"
+#     total_cholesterol: str = "mmol/L"
+#     hdl_cholesterol: str = "mmol/L"
+#     smoking: str = "yes/no"
+#     is_male: str = "yes/no"
+#     diabetes: str = "yes/no"
+#     age_at_diabetes_diagnosis: str = "years"
+#     hba1c: str = "mmol/mol"
+#     egfr: str = "mL/min/1.73m²"
 
 
 class MaleCoefficientsDiabeticModel(MaleCoefficientsBaseModel):

@@ -5,8 +5,6 @@ This module implements the SCORE2 algorithm for 10-year cardiovascular disease r
 in apparently healthy individuals aged 40-69 years in Europe.
 """
 
-from pathlib import Path
-
 import numpy as np
 
 from vitals.biomarkers import helpers
@@ -16,12 +14,11 @@ from vitals.schemas.score2 import (
     FemaleCoefficientsBaseModel,
     MaleCoefficientsBaseModel,
     Markers,
-    Units,
 )
 
 
 def compute(
-    filepath: str | Path,
+    biomarkers: Markers,
 ) -> tuple[float, float, helpers.RiskCategory]:
     """
     Calculate the 10-year cardiovascular disease risk using the SCORE2 algorithm.
@@ -31,27 +28,15 @@ def compute(
     coefficients and applies regional calibration for Belgium (Low Risk region).
 
     Args:
-        filepath: Path to JSON file containing biomarker data including age, sex,
-                 systolic blood pressure, total cholesterol, HDL cholesterol, and smoking status.
+        biomarkers: Validated Markers object containing age, sex, systolic blood pressure,
+                   total cholesterol, HDL cholesterol, and smoking status.
 
     Returns:
         A tuple containing:
         - age: The patient's chronological age
         - risk_percentage: The calibrated 10-year CVD risk as a percentage
         - risk_category: Risk stratification category ("Low to moderate", "High", or "Very high")
-
-    Raises:
-        ValueError: If invalid biomarker class is used
     """
-    # Extract biomarkers from JSON file
-    biomarkers = helpers.extract_biomarkers_from_json(
-        filepath=filepath,
-        biomarker_class=Markers,
-        biomarker_units=Units(),
-    )
-
-    if not isinstance(biomarkers, Markers):
-        raise ValueError(f"Invalid biomarker class used: {biomarkers}")
 
     age: float = biomarkers.age
     is_male: bool = biomarkers.is_male  # True for male, False for female

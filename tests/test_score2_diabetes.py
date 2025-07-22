@@ -1,8 +1,11 @@
+import json
 from pathlib import Path
 
 import pytest
 
+from vitals.biomarkers import helpers
 from vitals.models import score2_diabetes
+from vitals.schemas.score2 import DiabetesMarkers, Markers, Units
 
 OUT_FILEPATH = Path(__file__).parent / "inputs" / "score2_diabetes"
 
@@ -19,21 +22,24 @@ OUT_FILEPATH = Path(__file__).parent / "inputs" / "score2_diabetes"
     ],
 )
 def test_score2_diabetes(filename, expected):
-    """
-    Test SCORE2-Diabetes cardiovascular risk calculation.
-
-    NOTE: The expected risk values and categories are placeholders.
-    They need to be calculated using MDCalc and updated before running tests.
-    """
     # Get the actual fixture value
-    age, pred_risk, pred_risk_category = score2_diabetes.compute(
-        OUT_FILEPATH / filename
-    )
-    expected_age, expected_risk, expected_category = expected
+    with open(OUT_FILEPATH / filename) as f:
+        test__input = json.load(f)
+        test_biomarkers = helpers.validate_biomarkers_for_algorithm(
+            raw_biomarkers=test__input, biomarker_class=Markers, biomarker_units=Units()
+        )
 
-    assert age == expected_age
-    assert pred_risk_category == expected_category
-    assert pytest.approx(pred_risk, abs=0.1) == expected_risk
+        if test_biomarkers is not None:
+            diabetes_biomarkers = DiabetesMarkers.try_from_markers(test_biomarkers)
+            if diabetes_biomarkers is not None:
+                age, pred_risk, pred_risk_category = score2_diabetes.compute(
+                    diabetes_biomarkers
+                )
+                expected_age, expected_risk, expected_category = expected
+
+                assert age == expected_age
+                assert pred_risk_category == expected_category
+                assert pytest.approx(pred_risk, abs=0.1) == expected_risk
 
 
 if __name__ == "__main__":

@@ -8,28 +8,22 @@
     },
     "raw_biomarkers": {
         "age": {
-            "value": 65,
-            "unit": "years"
+            "years": 65
         },
         "smoking": {
-            "value": true,
-            "unit": "yes/no"
+            "yes/no": true
         },
         "systolic_blood_pressure": {
-            "value": 150,
-            "unit": "mmHg"
+            "mmHg": 150
         },
         "total_cholesterol": {
-            "value": 7.0,
-            "unit": "mmol/L"
+            "mmol/L": 7.0
         },
         "hdl_cholesterol": {
-            "value": 1.1,
-            "unit": "mmol/L"
+            "mmol/L": 1.1
         },
         "is_male": {
-            "value": true,
-            "unit": "yes/no"
+            "yes/no": true
         }
     }
 }

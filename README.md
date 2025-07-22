@@ -48,15 +48,16 @@ from vitals.models.score2_diabetes import compute
 Biological age calculation using Levine's PhenoAge algorithm. This algorithm estimates biological aging based on 10 biomarkers and chronological age.
 
 **Required biomarkers:**
+
 - Albumin (g/dL or g/L)
-- Creatinine (mg/dL or ¼mol/L)
+- Creatinine (mg/dL or umol/L)
 - Glucose (mg/dL or mmol/L)
 - C-reactive protein (mg/L or mg/dL)
 - Lymphocyte percentage (%)
 - Mean cell volume (fL)
 - Red cell distribution width (%)
 - Alkaline phosphatase (U/L)
-- White blood cell count (10³/¼L or 10y/L)
+- White blood cell count (10Â³/L or 10y/L)
 - Age (years)
 
 ```python
@@ -87,6 +88,7 @@ print(f"Accelerated Aging: {result.accelerated_aging:.1f}")
 10-year cardiovascular disease risk assessment for non-diabetic European patients aged 40-69 years.
 
 **Required parameters:**
+
 - Age (40-69 years)
 - Sex (male/female)
 - Systolic blood pressure (mmHg)
@@ -118,10 +120,11 @@ print(f"Risk Category: {result.risk_category}")
 CVD risk assessment for diabetic patients, including diabetes-specific risk factors.
 
 **Additional parameters for diabetic patients:**
+
 - Diabetes status (boolean)
 - Age at diabetes diagnosis (years)
 - HbA1c (% or mmol/mol)
-- Estimated glomerular filtration rate (mL/min/1.73m²)
+- Estimated glomerular filtration rate (mL/min/1.73mÂ²)
 
 ```python
 from vitals.models.score2_diabetes import compute
@@ -179,16 +182,19 @@ result = compute(biomarkers)
 ## Algorithms Implemented
 
 ### PhenoAge (Levine et al., 2018)
+
 Biological age estimation based on 10 clinical biomarkers. The algorithm was developed using NHANES data and validated across multiple cohorts.
 
 **Reference:** Levine, M.E. et al. An epigenetic biomarker of aging for lifespan and healthspan. Aging (2018).
 
 ### SCORE2 (European Society of Cardiology, 2021)
+
 Updated cardiovascular risk prediction algorithm for European populations, calibrated for different risk regions.
 
 **Reference:** SCORE2 working group. SCORE2 risk prediction algorithms. European Heart Journal (2021).
 
 ### SCORE2-Diabetes (European Society of Cardiology, 2023)
+
 Diabetes-specific cardiovascular risk assessment incorporating diabetes duration, glycemic control, and kidney function.
 
 **Reference:** SCORE2-Diabetes working group. European Heart Journal (2023).
@@ -212,6 +218,7 @@ make lint
 ```
 
 The project uses:
+
 - **UV** for dependency management
 - **pytest** for testing with coverage reporting
 - **pre-commit** hooks for code quality

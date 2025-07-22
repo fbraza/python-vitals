@@ -7,61 +7,39 @@
         "laboratory": "Mayo Clinic Labs"
     },
     "raw_biomarkers": {
-        "albumin_g_dl": {
-            "value": 4.1,
-            "unit": "g/dL"
+        "albumin": {
+            "g/dL": 4.1,
+            "g/L": 41.0
         },
-        "creatinine_mg_dl": {
-            "value": 0.584,
-            "unit": "mg/dL"
+        "creatinine": {
+            "mg/dL": 0.584,
+            "umol/L": 51.6256
         },
-        "glucose_mg_dl": {
-            "value": 89.0,
-            "unit": "mg/dL"
+        "glucose": {
+            "mg/dL": 89.0,
+            "mmol/L": 4.9444
         },
-        "crp_mg_dl": {
-            "value": 0.21,
-            "unit": "mg/dL"
+        "crp": {
+            "mg/dL": 0.21,
+            "mg/L": 2.1
         },
-        "lymphocyte_percent_%": {
-            "value": 43.85,
-            "unit": "%"
+        "lymphocyte_percent": {
+            "%": 43.85
         },
-        "mean_cell_volume_fl": {
-            "value": 91.9,
-            "unit": "fL"
+        "mean_cell_volume": {
+            "fL": 91.9
         },
-        "red_cell_distribution_width_%": {
-            "value": 12.7,
-            "unit": "%"
+        "red_cell_distribution_width": {
+            "%": 12.7
         },
-        "alkaline_phosphatase_u_l": {
-            "value": 96,
-            "unit": "U/L"
+        "alkaline_phosphatase": {
+            "U/L": 96
         },
-        "white_blood_cell_count_1000_cells_ul": {
-            "value": 4.7,
-            "unit": "1000 cells/uL"
+        "white_blood_cell_count": {
+            "1000 cells/uL": 4.7
         },
-        "age_years": {
-            "value": 80,
-            "unit": "years"
-        },
-        "glucose_mmol_l": {
-            "value": 4.9444,
-            "unit": "mmol/L"
-        },
-        "creatinine_umol_l": {
-            "value": 51.6256,
-            "unit": "umol/L"
-        },
-        "albumin_g_l": {
-            "value": 41.0,
-            "unit": "g/L"
-        },
-        "crp_mg_l": {
-            "value": 2.1,
-            "unit": "mg/L"
+        "age": {
+            "years": 80
         }
     }
 }
