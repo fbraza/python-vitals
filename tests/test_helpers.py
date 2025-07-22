@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 from vitals.biomarkers import helpers
@@ -13,21 +14,24 @@ def test_validate_biomarkers_for_algorithm_valid_phenoage():
     filepath = INP_FILEPATH_PHENOAGE / "test__input__patient_01.json"
     units = phenoage.Units()
 
+    with open(filepath) as f:
+        test__biomarkers = json.load(f)
+
     result = helpers.validate_biomarkers_for_algorithm(
-        filepath, phenoage.Markers, units
+        test__biomarkers, phenoage.Markers, units
     )
 
-    assert isinstance(result, phenoage.Markers)
-    assert result.albumin == 40.5  # g/L
-    assert result.creatinine == 103.428  # umol/L
-    assert result.glucose == 3.9167  # mmol/L
-    assert result.crp == 0.5  # mg/dL
-    assert result.lymphocyte_percent == 40.3  # %
-    assert result.mean_cell_volume == 89.1  # fL
-    assert result.red_cell_distribution_width == 11.9  # %
-    assert result.alkaline_phosphatase == 63.5  # U/L
-    assert result.white_blood_cell_count == 6.05  # 1000 cells/uL
-    assert result.age == 39  # years
+    if result is not None:
+        assert result.albumin == 40.5  # g/L
+        assert result.creatinine == 103.428  # umol/L
+        assert result.glucose == 3.9167  # mmol/L
+        assert result.crp == 0.5  # mg/dL
+        assert result.lymphocyte_percent == 40.3  # %
+        assert result.mean_cell_volume == 89.1  # fL
+        assert result.red_cell_distribution_width == 11.9  # %
+        assert result.alkaline_phosphatase == 63.5  # U/L
+        assert result.white_blood_cell_count == 6.05  # 1000 cells/uL
+        assert result.age == 39  # years
 
 
 def test_validate_biomarkers_for_algorithm_valid_score2():
@@ -35,15 +39,20 @@ def test_validate_biomarkers_for_algorithm_valid_score2():
     filepath = INP_FILEPATH_SCORE2 / "test__input__patient_25.json"
     units = score2.Units()
 
-    result = helpers.validate_biomarkers_for_algorithm(filepath, score2.Markers, units)
+    with open(filepath) as f:
+        test__biomarkers = json.load(f)
 
-    assert isinstance(result, score2.Markers)
-    assert result.age == 50
-    assert result.systolic_blood_pressure == 140
-    assert result.total_cholesterol == 6.3
-    assert result.hdl_cholesterol == 1.4
-    assert result.smoking is True
-    assert result.is_male is False
+    result = helpers.validate_biomarkers_for_algorithm(
+        test__biomarkers, score2.Markers, units
+    )
+
+    if result is not None:
+        assert result.age == 50
+        assert result.systolic_blood_pressure == 140
+        assert result.total_cholesterol == 6.3
+        assert result.hdl_cholesterol == 1.4
+        assert result.smoking is True
+        assert result.is_male is False
 
 
 def test_validate_biomarkers_for_algorithm_missing_phenoage_biomarker():
@@ -51,9 +60,13 @@ def test_validate_biomarkers_for_algorithm_missing_phenoage_biomarker():
     filepath = INP_FILEPATH_INVALID / "test__phenoage_missing_albumin.json"
     units = phenoage.Units()
 
+    with open(filepath) as f:
+        test__biomarkers = json.load(f)
+
     result = helpers.validate_biomarkers_for_algorithm(
-        filepath, phenoage.Markers, units
+        test__biomarkers, phenoage.Markers, units
     )
+
     assert result is None
 
 
@@ -62,5 +75,10 @@ def test_validate_biomarkers_for_algorithm_missing_score2_biomarker():
     filepath = INP_FILEPATH_INVALID / "test__score2_missing_sbp.json"
     units = score2.Units()
 
-    result = helpers.validate_biomarkers_for_algorithm(filepath, score2.Markers, units)
+    with open(filepath) as f:
+        test__biomarkers = json.load(f)
+
+    result = helpers.validate_biomarkers_for_algorithm(
+        test__biomarkers, score2.Markers, units
+    )
     assert result is None

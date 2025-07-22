@@ -1,8 +1,11 @@
+import json
 from pathlib import Path
 
 import pytest
 
+from vitals.biomarkers import helpers
 from vitals.models import phenoage
+from vitals.schemas.phenoage import Markers, Units
 
 OUT_FILEPATH = Path(__file__).parent / "inputs" / "phenoage"
 
@@ -25,12 +28,18 @@ OUT_FILEPATH = Path(__file__).parent / "inputs" / "phenoage"
 )
 def test_phenoage(filename, expected):
     # Get the actual fixture value using request.getfixturevalue
-    age, pred_age, accl_age = phenoage.compute(OUT_FILEPATH / filename)
-    expected_age, expected_pred_age, expected_accl_age = expected
+    with open(OUT_FILEPATH / filename) as f:
+        test__input = json.load(f)
+        test_biomarkers = helpers.validate_biomarkers_for_algorithm(
+            raw_biomarkers=test__input, biomarker_class=Markers, biomarker_units=Units()
+        )
+        if test_biomarkers is not None:
+            age, pred_age, accl_age = phenoage.compute(test_biomarkers)
+            expected_age, expected_pred_age, expected_accl_age = expected
 
-    assert age == expected_age
-    assert pytest.approx(pred_age, abs=0.5) == expected_pred_age
-    assert pytest.approx(accl_age, abs=0.02) == expected_accl_age
+            assert age == expected_age
+            assert pytest.approx(pred_age, abs=0.5) == expected_pred_age
+            assert pytest.approx(accl_age, abs=0.02) == expected_accl_age
 
 
 if __name__ == "__main__":

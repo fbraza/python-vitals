@@ -1,6 +1,4 @@
-import json
 from collections.abc import Callable
-from pathlib import Path
 from typing import Any, Literal, TypeAlias, TypeVar
 
 import numpy as np
@@ -10,7 +8,7 @@ from vitals.schemas import phenoage, score2
 
 RiskCategory: TypeAlias = Literal["Low to moderate", "High", "Very high"]
 Biomarkers = TypeVar("Biomarkers", bound=BaseModel)
-Units = phenoage.Units | score2.Units | score2.UnitsDiabetes
+Units = phenoage.Units | score2.Units
 
 
 def add_converted_biomarkers(biomarkers: dict[str, Any]) -> dict[str, Any]:
@@ -61,7 +59,7 @@ def add_converted_biomarkers(biomarkers: dict[str, Any]) -> dict[str, Any]:
 
 
 def validate_biomarkers_for_algorithm(
-    filepath: str | Path,
+    raw_biomarkers: dict[str, Any],
     biomarker_class: type[Biomarkers],
     biomarker_units: Units,
 ) -> Biomarkers | None:
@@ -69,7 +67,7 @@ def validate_biomarkers_for_algorithm(
     Validate if all required biomarkers are available for a specific algorithm.
 
     Args:
-        filepath: Path to JSON file containing biomarker data
+        raw_biomarkers: Dictionary containing biomarker data with unit-keyed values
         biomarker_class: Pydantic model class defining required biomarkers
         biomarker_units: Pydantic model instance containing expected units
 
@@ -77,10 +75,6 @@ def validate_biomarkers_for_algorithm(
         Instance of biomarker_class with extracted biomarker values if all required
         biomarkers are present, None if any are missing
     """
-    with open(filepath) as f:
-        data = json.load(f)
-
-    raw_biomarkers = data.get("raw_biomarkers", {})
     expected_units_dict = biomarker_units.model_dump()
     required_fields = biomarker_class.model_fields
 

@@ -1,27 +1,17 @@
-from pathlib import Path
-
 import numpy as np
 
 from vitals.biomarkers import helpers
-from vitals.schemas.phenoage import Gompertz, LinearModel, Markers, Units
+from vitals.schemas.phenoage import Gompertz, LinearModel, Markers
 
 
-def compute(filepath: str | Path) -> tuple[float, float, float] | None:
+def compute(biomarkers: Markers) -> tuple[float, float, float]:
     """
     The Phenoage score is calculated as a weighted (coefficients available in Levine et al 2018)
     linear combination of these variables, which was then transformed into units of years using 2 parametric
     (Gompertz distribution) proportional hazard models—one for the linearly combined score for all 10 variables
     and another for chronological age. Thus, PhenoAge represents the expected age within the population that
-    corresponds to a person’s estimated hazard of mortality as a function of his/her biological profile.
+    corresponds to a person's estimated hazard of mortality as a function of his/her biological profile.
     """
-    # Validate biomarkers are available for PhenoAge algorithm
-    biomarkers = helpers.validate_biomarkers_for_algorithm(
-        filepath=filepath,
-        biomarker_class=Markers,
-        biomarker_units=Units(),
-    )
-    if biomarkers is None:
-        return None
 
     age: float = biomarkers.age
     coef: LinearModel = LinearModel()
