@@ -10,6 +10,8 @@ dependencies = [
  "numpy",
  "requests>=2.32.4",
  "coverage>=7.9.1",
+ "fastapi>=0.104.1",
+ "uvicorn[standard]>=0.24.0",
 ]
 
 [dependency-groups]
