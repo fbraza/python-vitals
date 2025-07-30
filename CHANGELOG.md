@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.2.0] - 2025-01-19
 
 ### Added
+
 - SCORE2-Diabetes cardiovascular risk algorithm implementation
   - Comprehensive risk calculation for diabetic patients
   - Support for multiple risk regions and calibration
@@ -22,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Standardized biomarker schemas with Pydantic
 
 ### Changed
+
 - Comprehensive type hints throughout the codebase
   - Enhanced type safety and IDE support
   - Better code documentation through types
@@ -35,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Improved test naming conventions
 
 ### Fixed
+
 - Type hint issues with proper TypedDict approach
 - Import consistency across the package
 - Test function naming conventions
@@ -42,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MyPy errors resolved
 
 ### Technical Improvements
+
 - Added pre-commit hooks for code quality
 - Configured GitHub Actions for automated code review
 - Enhanced development workflow with Makefile
@@ -50,6 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - Initial Release
 
 ### Added
+
 - PhenoAge algorithm implementation (Levine's method)
 - Basic biomarker processing functionality
 - Initial project structure and setup
