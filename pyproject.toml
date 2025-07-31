@@ -1,15 +1,15 @@
 [project]
-name = "python_phenoage"
+name = "python-phenoage"
 version = "0.2.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
- "pydantic",
- "pandas",
- "numpy",
- "requests>=2.32.4",
- "coverage>=7.9.1",
+    "pydantic",
+    "pandas",
+    "numpy",
+    "requests>=2.32.4",
+    "coverage>=7.9.1",
 ]
 
 [dependency-groups]
@@ -19,7 +19,7 @@ dev = [
     "coverage",
     "ipython>=9.3.0",
     "ruff",
-    "ty"
+    "ty",
 ]
 
 [build-system]
@@ -39,4 +39,4 @@ exclude = [
     "vitals/typestubs",
 ]
 venvPath = ".venv"
-venv = "python_phenoage"
+venv = "python-phenoage"

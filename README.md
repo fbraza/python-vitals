@@ -49,14 +49,14 @@ Biological age calculation using Levine's PhenoAge algorithm. This algorithm est
 
 **Required biomarkers:**
 - Albumin (g/dL or g/L)
-- Creatinine (mg/dL or ¼mol/L)
+- Creatinine (mg/dL or Â¼mol/L)
 - Glucose (mg/dL or mmol/L)
 - C-reactive protein (mg/L or mg/dL)
 - Lymphocyte percentage (%)
 - Mean cell volume (fL)
 - Red cell distribution width (%)
 - Alkaline phosphatase (U/L)
-- White blood cell count (10³/¼L or 10y/L)
+- White blood cell count (10Â³/Â¼L or 10y/L)
 - Age (years)
 
 ```python
@@ -121,7 +121,7 @@ CVD risk assessment for diabetic patients, including diabetes-specific risk fact
 - Diabetes status (boolean)
 - Age at diabetes diagnosis (years)
 - HbA1c (% or mmol/mol)
-- Estimated glomerular filtration rate (mL/min/1.73m²)
+- Estimated glomerular filtration rate (mL/min/1.73mÂ²)
 
 ```python
 from vitals.models.score2_diabetes import compute
