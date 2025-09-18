@@ -6,7 +6,6 @@ risk estimation in patients with diabetes.
 """
 
 import math
-from pathlib import Path
 
 import numpy as np
 
@@ -14,15 +13,14 @@ from vitals.biomarkers import helpers
 from vitals.schemas.score2 import (
     BaselineSurvival,
     CalibrationScales,
+    DiabetesMarkers,
     FemaleCoefficientsDiabeticModel,
     MaleCoefficientsDiabeticModel,
-    MarkersDiabetes,
-    UnitsDiabetes,
 )
 
 
 def compute(
-    filepath: str | Path,
+    biomarkers: DiabetesMarkers,
 ) -> tuple[float, float, helpers.RiskCategory]:
     """
     Calculate the 10-year cardiovascular disease risk using the SCORE2-Diabetes algorithm.
@@ -32,28 +30,15 @@ def compute(
     calibration for Belgium (Low Risk region).
 
     Args:
-        filepath: Path to JSON file containing biomarker data including age, sex,
-                 systolic blood pressure, total cholesterol, HDL cholesterol, smoking status,
-                 diabetes status, age at diabetes diagnosis, HbA1c, and eGFR.
+        biomarkers: DiabetesMarkers object with guaranteed non-None diabetes-specific fields
+                   (diabetes status, age at diabetes diagnosis, HbA1c, and eGFR).
 
     Returns:
         A tuple containing:
         - age: The patient's chronological age
         - risk_percentage: The calibrated 10-year CVD risk as a percentage
         - risk_category: Risk stratification category ("Low to moderate", "High", or "Very high")
-
-    Raises:
-        ValueError: If invalid biomarker class is used
     """
-    # Extract biomarkers from JSON file
-    biomarkers = helpers.extract_biomarkers_from_json(
-        filepath=filepath,
-        biomarker_class=MarkersDiabetes,
-        biomarker_units=UnitsDiabetes(),
-    )
-
-    if not isinstance(biomarkers, MarkersDiabetes):
-        raise ValueError(f"Invalid biomarker class used: {biomarkers}")
 
     age: float = biomarkers.age
     is_male: bool = biomarkers.is_male  # True for male, False for female

@@ -1,8 +1,11 @@
+import json
 from pathlib import Path
 
 import pytest
 
+from vitals.biomarkers import helpers
 from vitals.models import score2
+from vitals.schemas.score2 import Markers, Units
 
 OUT_FILEPATH = Path(__file__).parent / "inputs" / "score2"
 
@@ -26,12 +29,19 @@ OUT_FILEPATH = Path(__file__).parent / "inputs" / "score2"
 )
 def test_score2(filename, expected):
     # Get the actual fixture value using request.getfixturevalue
-    age, pred_risk, pred_risk_category = score2.compute(OUT_FILEPATH / filename)
-    expected_age, expected_risk, expected_category = expected
+    with open(OUT_FILEPATH / filename) as f:
+        test__input = json.load(f)
+        test_biomarkers = helpers.validate_biomarkers_for_algorithm(
+            raw_biomarkers=test__input, biomarker_class=Markers, biomarker_units=Units()
+        )
 
-    assert age == expected_age
-    assert pred_risk_category == expected_category
-    assert pytest.approx(pred_risk, abs=0.1) == expected_risk
+        if test_biomarkers is not None:
+            age, pred_risk, pred_risk_category = score2.compute(test_biomarkers)
+            expected_age, expected_risk, expected_category = expected
+
+            assert age == expected_age
+            assert pred_risk_category == expected_category
+            assert pytest.approx(pred_risk, abs=0.1) == expected_risk
 
 
 if __name__ == "__main__":

@@ -1,10 +1,13 @@
 # CLAUDE.md - Project Guidelines for Claude Code
 
 ## Project Overview
+
 This repository contains biomarker algorithms for health assessment, including PhenoAge, SCORE2, and SCORE2-Diabetes cardiovascular risk calculations.
 
 ## Environment Setup
+
 **IMPORTANT**: This project uses UV for dependency management. Before starting work:
+
 ```bash
 # Sync dependencies and activate virtual environment
 uv sync
@@ -14,32 +17,39 @@ source .venv/bin/activate
 ```
 
 ## Python Style Guidelines
+
 **CRITICAL**: Follow the principles from `/vitals/specs/coding_style.md`. DO NOT OVERENGINEER. Always find the right balance between clarity and complexity.
 
 ### Core Principles (from specs/coding_style.md)
+
 1. **Favor Simplicity Over Complexity**
+
    - Always choose simple, straightforward solutions
    - Avoid over-engineering and elaborate abstractions
    - No premature optimization
    - If there are two ways to solve a problem, choose the easier to understand
 
 2. **Clarity is Key**
+
    - Readable code beats clever code
    - Use clear, descriptive names
    - Reduce cognitive load
    - Code should express intent clearly at a glance
 
 3. **Write Pythonic Code**
+
    - Follow Python community standards and idioms
    - Use list comprehensions, generators, context managers appropriately
    - Write code that looks like Python wrote it
 
 4. **Don't Repeat Yourself (DRY)**
+
    - Avoid code duplication
    - Use functions and modules for common logic
    - But don't abstract too early
 
 5. **Focus on Readability First**
+
    - PEP8 is a guide, not a law
    - Readability trumps mechanical adherence to style rules
    - Consider the human reader first
@@ -49,7 +59,9 @@ source .venv/bin/activate
    - Use PEP8 as baseline but prioritize readability
 
 ### Type Hints Guidelines
+
 **IMPORTANT**: Do not overengineer type hints. Find the right balance:
+
 - Use type hints for function signatures and class attributes
 - Keep type hints simple and readable
 - Don't create complex type aliases unless they add clarity
@@ -57,6 +69,7 @@ source .venv/bin/activate
 - If a type hint makes code harder to read, reconsider it
 
 ## Project Structure
+
 ```
 vitals/
 ├── biomarkers/          # Common biomarker utilities
@@ -78,11 +91,13 @@ vitals/
 ## Development Workflow
 
 ### Before Starting Work
+
 1. Sync dependencies: `uv sync`
 2. Activate virtual environment: `source .venv/bin/activate` (if not auto-activated)
 3. Ensure git hooks are installed: `make install` (this also installs pre-commit hooks)
 
 ### Running Tests
+
 ```bash
 # Run tests with coverage report
 make test
@@ -92,7 +107,9 @@ make lint
 ```
 
 ### Git Commit Process
+
 **CRITICAL**: Before ANY commit:
+
 1. Ensure pre-commit hooks are active (installed via `make install`)
 2. If pre-commit hooks are not running automatically:
    - STOP and inform that git hooks need to be activated
@@ -104,7 +121,9 @@ make lint
    - Other configured checks
 
 ### Code Quality Checks
+
 Before committing changes, ensure:
+
 - [ ] Virtual environment is activated
 - [ ] Code follows the style guidelines in `/vitals/specs/coding_style.md`
 - [ ] Type hints are balanced (not overengineered)
@@ -116,6 +135,7 @@ Before committing changes, ensure:
 - [ ] Pre-commit hooks pass
 
 ## Common Patterns
+
 - Use Pydantic BaseModel for data validation
 - Extract biomarkers using `biomarkers.helpers.extract_biomarkers_from_json()`
 - Algorithm implementations go in `models/` directory
@@ -124,7 +144,9 @@ Before committing changes, ensure:
 - Keep type hints simple and practical
 
 ## Testing Approach
+
 When implementing new features:
+
 1. Check for existing test patterns in the codebase
 2. Write tests that are simple and clear
 3. Ensure edge cases are handled properly
@@ -132,6 +154,7 @@ When implementing new features:
 5. Run tests before committing: `make test`
 
 ## Important Notes
+
 - The SCORE2 implementation uses Belgium (Low Risk region) calibration by default
 - The SCORE2-Diabetes implementation includes diabetes-specific risk adjustments
 - Binary values (sex, smoking, diabetes) should use boolean types in schemas

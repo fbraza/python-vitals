@@ -7,45 +7,35 @@
         "laboratory": "SCORE2-Diabetes Labs"
     },
     "raw_biomarkers": {
-        "age_years": {
-            "value": 65,
-            "unit": "years"
+        "age": {
+            "years": 65
         },
-        "smoking_yes_no": {
-            "value": false,
-            "unit": "yes/no"
+        "smoking": {
+            "yes/no": false
         },
-        "systolic_blood_pressure_mmhg": {
-            "value": 155,
-            "unit": "mmHg"
+        "systolic_blood_pressure": {
+            "mmHg": 155
         },
-        "total_cholesterol_mmol_l": {
-            "value": 7.2,
-            "unit": "mmol/L"
+        "total_cholesterol": {
+            "mmol/L": 7.2
         },
-        "hdl_cholesterol_mmol_l": {
-            "value": 0.9,
-            "unit": "mmol/L"
+        "hdl_cholesterol": {
+            "mmol/L": 0.9
         },
-        "is_male_yes_no": {
-            "value": true,
-            "unit": "yes/no"
+        "is_male": {
+            "yes/no": true
         },
-        "diabetes_yes_no": {
-            "value": true,
-            "unit": "yes/no"
+        "diabetes": {
+            "yes/no": true
         },
-        "age_at_diabetes_diagnosis_years": {
-            "value": 55,
-            "unit": "years"
+        "age_at_diabetes_diagnosis": {
+            "years": 55
         },
-        "hba1c_mmol_mol": {
-            "value": 68,
-            "unit": "mmol/mol"
+        "hba1c": {
+            "mmol/mol": 68
         },
-        "egfr_ml_min_1_73m2": {
-            "value": 60,
-            "unit": "mL/min/1.73m\u00b2"
+        "egfr": {
+            "mL/min/1.73m\u00b2": 60
         }
     }
 }

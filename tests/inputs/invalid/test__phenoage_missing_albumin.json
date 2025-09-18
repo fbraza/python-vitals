@@ -1,16 +1,12 @@
 {
     "metadata": {
-        "patient_id": "P001-2024-001",
+        "patient_id": "P999-2024-999",
         "sex": "female",
         "timestamp": "2024-06-15T08:30:00Z",
         "test_date": "2024-06-15",
-        "laboratory": "Quest Diagnostics"
+        "laboratory": "Test Lab"
     },
     "raw_biomarkers": {
-        "albumin": {
-            "g/dL": 4.05,
-            "g/L": 40.5
-        },
         "creatinine": {
             "mg/dL": 1.17,
             "umol/L": 103.428
