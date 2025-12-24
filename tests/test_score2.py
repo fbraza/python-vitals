@@ -35,6 +35,8 @@ def test_score2(filename, expected):
             raw_biomarkers=test__input, biomarker_class=Markers, biomarker_units=Units()
         )
 
+        assert test_biomarkers is None
+
         if test_biomarkers is not None:
             age, pred_risk, pred_risk_category = score2.compute(test_biomarkers)
             expected_age, expected_risk, expected_category = expected

@@ -84,10 +84,19 @@ def validate_biomarkers_for_algorithm(
         for field in required_fields
     }
 
+
     # Check for missing biomarkers and return None if any are missing
     for field, value in biomarkers_for_scoring.items():
         if value is None:
-            return None
+            if field in [
+                "diabetes",
+                "age_at_diabetes_diagnosis",
+                "hba1c",
+                "egfr"
+            ]:
+                continue
+            else:
+                return None
 
     return biomarker_class(**biomarkers_for_scoring)
 
